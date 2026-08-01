@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ KREOBASS | Animateur &amp; Platiniste Professionnel — Centre-Val de Loire</title>
+  <meta name="description" content="DJ KREOBASS — DJ polyvalent « all styles », des années 80 à aujourd'hui. Mariages, anniversaires, séminaires, soirées bars &amp; guinguettes à Chartres, Eure-et-Loir et Sarthe.">
+  <meta name="keywords"    content="DJ Kreobass, DJ Chartres, DJ Eure-et-Loir, DJ Sarthe, DJ mariage, DJ anniversaire, DJ entreprise, animateur soirée, all styles">
+  <meta property="og:title"       content="DJ KREOBASS | Animateur &amp; Platiniste — Centre-Val de Loire">
+  <meta property="og:description" content="DJ polyvalent « all styles » — des années 80 à aujourd'hui. Mariages, anniversaires, séminaires, soirées.">
+  <meta property="og:type"        content="website">
+  <meta property="og:image"       content="assets/images/hero.png">
+  <meta name="theme-color" content="#050504">
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/icon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/icon-180.png">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:ital,wght@0,200;0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="flag-background" aria-hidden="true"></div>
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- ═══════ NAVIGATION ═══════ -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigation principale">
+    <div class="nav-container">
+      <a href="#home" class="nav-logo" aria-label="DJ KREOBASS — Accueil">
+        <img src="assets/images/logo.png" alt="Logo DJ KREOBASS">
+      </a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#home"    class="nav-link">Accueil</a></li>
+        <li><a href="#about"   class="nav-link">À Propos</a></li>
+        <li><a href="#pricing" class="nav-link">Tarifs</a></li>
+        <li><a href="#mixes"   class="nav-link">Mixes</a></li>
+        <li><a href="#events"  class="nav-link">Événements</a></li>
+        <li><a href="#reviews" class="nav-link">Avis</a></li>
+        <li><a href="#contact" class="nav-link nav-cta">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero" id="home" aria-label="Présentation">
+    <div class="hero-content">
+      <div class="hero-eras">
+        <span class="era-pill">80's</span>
+        <span class="era-pill">90's</span>
+        <span class="era-pill">2000's</span>
+        <span class="era-pill">2010's</span>
+        <span class="era-pill">Aujourd'hui</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="title-dj">Dj</span>
+        <span class="title-name">KREO<span>BASS</span></span>
+      </h1>
+      <p class="hero-desc">Animateur &amp; Platiniste &nbsp;·&nbsp; All Styles &nbsp;·&nbsp; 80's à Aujourd'hui</p>
+      <div class="hero-buttons">
+        <a href="#mixes"   class="btn btn-primary">Écouter les Mixes</a>
+        <a href="#pricing" class="btn btn-bleu">Voir les Prestations</a>
+        <a href="#contact" class="btn btn-outline">Demander un Devis</a>
+      </div>
+      <div class="hero-socials">
+        <a href="https://www.facebook.com/Deejaykreobass/" class="social-link" title="Facebook" rel="noopener" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link" title="Instagram" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link" title="YouTube" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <span>Défiler</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ═══════ TICKER ═══════ -->
+  <div class="music-ticker" aria-hidden="true">
+    <div class="ticker-track" id="ticker-track"></div>
+  </div>
+
+  <!-- ═══════ ABOUT ═══════ -->
+  <section class="about" id="about" aria-labelledby="about-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">À Propos</span>
+        <h2 class="section-title" id="about-title">L'Artiste</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-image">
+          <div class="about-img-placeholder">
+            <img src="assets/images/hero.png" alt="DJ KREOBASS aux platines">
+          </div>
+          <div class="about-badge">
+            <span class="badge-number">10+</span>
+            <span class="badge-text">Ans d'expérience</span>
+          </div>
+        </div>
+        <div class="about-content">
+          <p class="about-intro">"Un DJ, toutes les musiques, toutes les générations…"</p>
+          <p class="about-text">
+            <strong>DJ KREOBASS</strong> est un animateur et platiniste professionnel <em>100% polyvalent</em>,
+            très actif en <strong>Centre-Val de Loire</strong> et dans les départements limitrophes
+            (Eure-et-Loir, Sarthe). Des hits <strong>disco des années 80</strong> aux
+            <strong>bangers d'aujourd'hui</strong>, en passant par le hip-hop, la house et l'électro :
+            il maîtrise tout, pour tous les publics.
+          </p>
+          <p class="about-text">
+            Sets généralistes <strong>« all styles »</strong>, réactivité (devis personnalisé en moins d'une heure)
+            et professionnalisme : il anime aussi bien des <strong>soirées en bars et guinguettes</strong>
+            (Chope et Compagnie, Les Fouleries…) que des <strong>mariages</strong>, <strong>anniversaires</strong>
+            et <strong>événements d'entreprise</strong>, avec du matériel de sonorisation et d'éclairage adapté
+            à chaque lieu.
+          </p>
+          <div class="about-skills">
+            <div class="skill-item">
+              <span class="skill-name">Versatilité / All Styles</span>
+              <div class="skill-bar"><div class="skill-fill" data-width="98"></div></div>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Mariages &amp; Événements Privés</span>
+              <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Hip-Hop · R&amp;B · Dancehall</span>
+              <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Corporate &amp; Séminaires</span>
+              <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+            </div>
+          </div>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-number" data-count="500">0</span>
+              <span class="stat-label">Prestations</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="50">0</span>
+              <span class="stat-label">Mixes</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="15">0</span>
+              <span class="stat-label">Lieux Partenaires</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="10">0</span>
+              <span class="stat-label">Années</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ ÈRES MUSICALES ═══════ -->
+  <section class="eras" id="eras" aria-labelledby="eras-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Polyvalence</span>
+        <h2 class="section-title" id="eras-title">Toutes les Ères</h2>
+      </div>
+      <div class="eras-grid">
+        <div class="era-card era-80s">
+          <span class="era-icon">🕺</span>
+          <span class="era-decade">80's</span>
+          <div class="era-genres">
+            <span>Disco</span><span>Funk</span><span>Soul</span>
+            <span>Rock</span><span>New Wave</span><span>Synthpop</span>
+            <span>Boogie</span><span>Pop</span>
+          </div>
+        </div>
+        <div class="era-card era-90s">
+          <span class="era-icon">🎤</span>
+          <span class="era-decade">90's</span>
+          <div class="era-genres">
+            <span>Hip-Hop</span><span>R&amp;B</span><span>House</span>
+            <span>Techno</span><span>Jungle</span><span>Ragga</span>
+            <span>Eurodance</span><span>Dancehall</span>
+          </div>
+        </div>
+        <div class="era-card era-2000s">
+          <span class="era-icon">💿</span>
+          <span class="era-decade">2000's</span>
+          <div class="era-genres">
+            <span>Pop</span><span>Électro</span><span>R&amp;B</span>
+            <span>Reggaeton</span><span>Moombahton</span><span>Dubstep</span>
+            <span>Rap FR</span><span>US Rap</span>
+          </div>
+        </div>
+        <div class="era-card era-now">
+          <span class="era-icon">🔥</span>
+          <span class="era-decade">Now</span>
+          <div class="era-genres">
+            <span>Afrobeats</span><span>Amapiano</span><span>Trap</span>
+            <span>Bass Music</span><span>SoundSystem</span><span>Drill</span>
+            <span>Reggae</span><span>Shatta</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ TARIFS ═══════ -->
+  <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Prestations</span>
+        <h2 class="section-title" id="pricing-title">Tarifs &amp; Formules</h2>
+      </div>
+      <div class="pricing-grid" id="pricing-grid"></div>
+      <p class="pricing-note">
+        Chaque événement est unique : <strong>tous les tarifs sont établis sur devis personnalisé</strong>,
+        selon la durée, le lieu et le matériel nécessaire. Réponse généralement en <strong>moins d'une heure</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════ MIXES ═══════ -->
+  <section class="mixes" id="mixes" aria-labelledby="mixes-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Écouter</span>
+        <h2 class="section-title" id="mixes-title">Mes Mixes</h2>
+      </div>
+      <div class="mixes-grid" id="mixes-grid"></div>
+    </div>
+  </section>
+
+  <!-- ═══════ EVENTS ═══════ -->
+  <section class="events" id="events" aria-labelledby="events-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Agenda</span>
+        <h2 class="section-title" id="events-title">Événements</h2>
+      </div>
+      <div class="events-filter" role="group" aria-label="Filtrer">
+        <button class="filter-btn active" data-filter="upcoming">À venir</button>
+        <button class="filter-btn"        data-filter="past">Passés</button>
+        <button class="filter-btn"        data-filter="all">Tous</button>
+      </div>
+      <div class="events-list" id="events-list" role="list"></div>
+    </div>
+  </section>
+
+  <!-- ═══════ AVIS ═══════ -->
+  <section class="reviews" id="reviews" aria-labelledby="reviews-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Confiance</span>
+        <h2 class="section-title" id="reviews-title">Pourquoi Me Choisir</h2>
+      </div>
+      <div class="reviews-highlights">
+        <div class="highlight-card">
+          <div class="highlight-icon">🎉</div>
+          <div class="highlight-title">Ambiance Festive</div>
+          <div class="highlight-text">Sets généralistes « all styles » qui font danser un public varié, en bar, guinguette ou salle de réception.</div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">⚡</div>
+          <div class="highlight-title">Réactivité</div>
+          <div class="highlight-text">Devis personnalisé envoyé généralement en moins d'une heure via la page Facebook DJ KREOBASS.</div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">🎯</div>
+          <div class="highlight-title">Polyvalence</div>
+          <div class="highlight-text">À l'aise aussi bien sur des événements corporate que sur des fêtes privées, mariages et anniversaires.</div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">🔊</div>
+          <div class="highlight-title">Matériel Pro</div>
+          <div class="highlight-text">Sonorisation et éclairage adaptés à chaque lieu, pour une prestation clé en main.</div>
+        </div>
+      </div>
+      <div class="reviews-widget">
+        <div class="reviews-stars" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
+        </div>
+        <h3>Avis Google — bientôt disponibles ici</h3>
+        <p>Cet emplacement est prêt à afficher automatiquement les avis Google de la fiche établissement DJ KREOBASS dès sa mise en ligne. En attendant, retrouvez les retours et l'actualité sur la page Facebook officielle.</p>
+        <a href="https://www.facebook.com/Deejaykreobass/" class="btn btn-outline" target="_blank" rel="noopener">Voir la page Facebook</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ GALLERY ═══════ -->
+  <section class="gallery" id="gallery" aria-labelledby="gallery-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Galerie</span>
+        <h2 class="section-title" id="gallery-title">En Images</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item gallery-item-1">
+          <div class="gallery-placeholder" style="background:linear-gradient(145deg, #1a1200, #2a1e00);">
+            <span class="gallery-icon" aria-hidden="true">🎉</span>
+            <span class="gallery-label">Soirée Chope et Compagnie</span>
+          </div>
+          <div class="gallery-overlay"><span>Soirée Chope et Compagnie</span></div>
+        </div>
+        <div class="gallery-item gallery-item-2">
+          <div class="gallery-placeholder" style="background:linear-gradient(145deg, #120e00, #201800);">
+            <span class="gallery-icon" aria-hidden="true">🎧</span>
+            <span class="gallery-label">Les Fouleries — Châteaudun</span>
+          </div>
+          <div class="gallery-overlay"><span>Les Fouleries — Châteaudun</span></div>
+        </div>
+        <div class="gallery-item gallery-item-3">
+          <div class="gallery-placeholder" style="background:linear-gradient(145deg, #1a0f00, #2a1800);">
+            <span class="gallery-icon" aria-hidden="true">🕺</span>
+            <span class="gallery-label">Soirée Années 80-90</span>
+          </div>
+          <div class="gallery-overlay"><span>Soirée Années 80-90</span></div>
+        </div>
+        <div class="gallery-item gallery-item-4">
+          <div class="gallery-placeholder" style="background:linear-gradient(145deg, #140f00, #221b00);">
+            <span class="gallery-icon" aria-hidden="true">💍</span>
+            <span class="gallery-label">Mariage</span>
+          </div>
+          <div class="gallery-overlay"><span>Mariage</span></div>
+        </div>
+        <div class="gallery-item gallery-item-5">
+          <div class="gallery-placeholder" style="background:linear-gradient(145deg, #1a1400, #2a2200);">
+            <span class="gallery-icon" aria-hidden="true">🏢</span>
+            <span class="gallery-label">Événement Entreprise</span>
+          </div>
+          <div class="gallery-overlay"><span>Événement Entreprise</span></div>
+        </div>
+        <div class="gallery-item gallery-item-6">
+          <div class="gallery-placeholder" style="background:linear-gradient(145deg, #171000, #241b00);">
+            <span class="gallery-icon" aria-hidden="true">🎂</span>
+            <span class="gallery-label">Anniversaire</span>
+          </div>
+          <div class="gallery-overlay"><span>Anniversaire</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CONTACT ═══════ -->
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Contact</span>
+        <h2 class="section-title" id="contact-title">Demande de Devis</h2>
+      </div>
+      <div class="alert alert-success" role="alert" id="form-success" hidden></div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Travaillons ensemble</h3>
+          <p>Disponible pour vos événements en Centre-Val de Loire et alentours — mariages, anniversaires, soirées bars &amp; guinguettes, séminaires et événements corporate.</p>
+          <div class="contact-items">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div>
+                <span class="contact-label">Téléphone</span>
+                <span class="contact-value">+33 (0)6 XX XX XX XX</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div>
+                <span class="contact-label">Email</span>
+                <span class="contact-value">contact@djkreobass.fr</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div>
+                <span class="contact-label">Localisation</span>
+                <span class="contact-value">Chartres · Eure-et-Loir (28) · Centre-Val de Loire</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form class="contact-form" id="contact-form" novalidate
+              action="https://formspree.io/f/VOTRE_ID_FORMSPREE" method="POST">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Nom complet <abbr title="requis">*</abbr></label>
+              <input type="text" id="name" name="name" required placeholder="Votre nom" autocomplete="name" maxlength="100">
+            </div>
+            <div class="form-group">
+              <label for="email">Email <abbr title="requis">*</abbr></label>
+              <input type="email" id="email" name="_replyto" required placeholder="votre@email.com" autocomplete="email" maxlength="150">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event_type">Type d'événement</label>
+              <select id="event_type" name="event_type">
+                <option value="">Sélectionner…</option>
+                <option value="wedding">Mariage</option>
+                <option value="birthday">Anniversaire</option>
+                <option value="corporate">Séminaire / Entreprise</option>
+                <option value="bar">Soirée Bar / Guinguette</option>
+                <option value="other">Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="event_date">Date souhaitée</label>
+              <input type="date" id="event_date" name="event_date">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="message">Message <abbr title="requis">*</abbr></label>
+            <textarea id="message" name="message" rows="5" required placeholder="Décrivez votre événement, lieu, nombre de personnes, ambiance souhaitée…" maxlength="2000"></textarea>
+          </div>
+          <input type="text" name="_gotcha" style="display:none">
+          <button type="submit" class="btn btn-primary btn-full">
+            Envoyer la demande
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <img src="assets/images/logo.png" alt="Logo DJ KREOBASS">
+          <p>Animateur &amp; Platiniste — Centre-Val de Loire</p>
+        </div>
+        <nav class="footer-links" aria-label="Navigation secondaire">
+          <a href="#home">Accueil</a>
+          <a href="#about">À Propos</a>
+          <a href="#pricing">Tarifs</a>
+          <a href="#mixes">Mixes</a>
+          <a href="#events">Événements</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/Deejaykreobass/" class="social-link" title="Facebook" target="_blank" rel="noopener">FB</a>
+          <a href="#" class="social-link" title="Instagram">IG</a>
+          <a href="#" class="social-link" title="YouTube">YT</a>
+        </div>
+      </div>
+      <p class="footer-bottom">
+        &copy; <span id="footer-year"></span> DJ KREOBASS &mdash; Tous droits réservés
+      </p>
+    </div>
+  </footer>
+
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

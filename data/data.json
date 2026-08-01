@@ -1,0 +1,122 @@
+{
+  "mixes": [
+    {
+      "title": "80's Groove Party",
+      "duration": "1:10:20",
+      "genre": "Disco · Funk · Soul",
+      "year": "2025",
+      "soundcloud_url": "#"
+    },
+    {
+      "title": "90's Nostalgie",
+      "duration": "1:05:00",
+      "genre": "Hip-Hop · R&B · House",
+      "year": "2025",
+      "soundcloud_url": "#"
+    },
+    {
+      "title": "2000's Hits",
+      "duration": "58:30",
+      "genre": "Pop · Électro · R&B",
+      "year": "2024",
+      "soundcloud_url": "#"
+    },
+    {
+      "title": "All Styles Wedding Mix",
+      "duration": "1:20:00",
+      "genre": "Généraliste · Mariage",
+      "year": "2024",
+      "soundcloud_url": "#"
+    },
+    {
+      "title": "Club Session Vol.1",
+      "duration": "1:02:15",
+      "genre": "Dancehall · Moombahton · Dubstep",
+      "year": "2023",
+      "soundcloud_url": "#"
+    },
+    {
+      "title": "Bass & SoundSystem",
+      "duration": "1:15:10",
+      "genre": "SoundSystem · Reggae · Bass",
+      "year": "2023",
+      "soundcloud_url": "#"
+    }
+  ],
+  "events": [
+    {
+      "date": "28 Avr 2026",
+      "venue": "Chope et Compagnie",
+      "city": "Chartres",
+      "time": "22:00",
+      "status": "upcoming",
+      "ticket_url": "#"
+    },
+    {
+      "date": "10 Mai 2026",
+      "venue": "Les Fouleries",
+      "city": "Châteaudun",
+      "time": "20:00",
+      "status": "upcoming",
+      "ticket_url": "#"
+    },
+    {
+      "date": "24 Mai 2026",
+      "venue": "Chope et Compagnie",
+      "city": "La Ferté-Bernard",
+      "time": "21:30",
+      "status": "upcoming",
+      "ticket_url": "#"
+    },
+    {
+      "date": "07 Juin 2026",
+      "venue": "Soirée Années 80-90",
+      "city": "Chartres",
+      "time": "22:00",
+      "status": "upcoming",
+      "ticket_url": "#"
+    },
+    {
+      "date": "15 Mar 2026",
+      "venue": "Soirée Privée",
+      "city": "Châteaudun",
+      "time": "23:00",
+      "status": "past",
+      "ticket_url": null
+    },
+    {
+      "date": "02 Fév 2026",
+      "venue": "Chope et Compagnie",
+      "city": "La Ferté-Bernard",
+      "time": "18:00",
+      "status": "past",
+      "ticket_url": null
+    }
+  ],
+  "pricing": [
+    {
+      "name": "Anniversaire",
+      "icon": "🎂",
+      "description": "Animation sur-mesure pour souffler vos bougies en musique, playlist adaptée à tous les âges.",
+      "features": ["Mix all styles", "Micro & annonces", "Sono adaptée à la salle"]
+    },
+    {
+      "name": "Mariage",
+      "icon": "💍",
+      "description": "De la cérémonie à la dernière danse : ambiance chic, playlist personnalisée avec les mariés.",
+      "features": ["Rendez-vous de préparation", "Mix vin d'honneur → soirée", "Éclairage d'ambiance"]
+    },
+    {
+      "name": "Entreprise / Séminaire",
+      "icon": "🏢",
+      "description": "Soirées corporate, lancements, team building : une prestation professionnelle et discrète ou festive selon vos besoins.",
+      "features": ["Matériel son & lumière", "Habillage sonore d'événement", "Discrétion & ponctualité"]
+    },
+    {
+      "name": "Bars & Guinguettes",
+      "icon": "🍻",
+      "description": "Soirées régulières dans les bars et guinguettes du secteur — ambiance festive garantie pour tous les publics.",
+      "features": ["Sets généralistes", "Interaction avec le public", "Matériel fourni"]
+    }
+  ]
+}
