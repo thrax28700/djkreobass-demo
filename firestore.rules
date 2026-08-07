@@ -8,7 +8,7 @@ service cloud.firestore {
       allow create: if request.auth != null
                     || ( request.resource.data.status == 'pending'
                          && request.resource.data.keys().hasOnly(
-                              ['name','email','phone','eventType','date','message','status','createdAt','source'])
+                              ['name','email','phone','eventType','date','message','status','createdAt','source','venueName'])
                          && request.resource.data.name is string
                          && request.resource.data.name.size() > 0
                          && request.resource.data.name.size() < 120
@@ -17,19 +17,23 @@ service cloud.firestore {
                          && request.resource.data.eventType is string
                          && request.resource.data.date is string
                          && request.resource.data.message is string
-                         && request.resource.data.message.size() < 2000 );
+                         && request.resource.data.message.size() < 2000
+                         && (!('venueName' in request.resource.data) || request.resource.data.venueName is string) );
       allow read, update, delete: if request.auth != null;
     }
 
-    /* Disponibilité du calendrier — lecture publique, sans données personnelles */
+    /* Disponibilité du calendrier — lecture publique, sans données personnelles.
+       venueName n'est présent que pour les soirées publiques (bar/guinguette) ;
+       les mariages/anniversaires/séminaires restent anonymes ("Soirée privée" côté site). */
     match /calendar/{dateId} {
       allow read: if true;
       /* Admin connecté : peut créer/écraser librement (réservation manuelle) */
       allow create: if request.auth != null
                     || ( request.resource.data.status == 'pending'
-                         && request.resource.data.keys().hasOnly(['date','eventType','status'])
+                         && request.resource.data.keys().hasOnly(['date','eventType','status','venueName'])
                          && request.resource.data.date is string
                          && request.resource.data.eventType is string
+                         && (!('venueName' in request.resource.data) || request.resource.data.venueName is string)
                          && !exists(/databases/$(database)/documents/calendar/$(dateId)) );
       allow update, delete: if request.auth != null;
     }

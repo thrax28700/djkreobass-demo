@@ -25,6 +25,12 @@ Le calendrier de réservation (sur le site) et l'espace admin (`admin.html`) par
 de données Firebase en temps réel : une réservation faite sur le site apparaît instantanément dans
 le tableau de bord admin, sur n'importe quel appareil connecté (toi et ton ami en même temps).
 
+Une fois qu'une réservation est **confirmée** par toi ou ton ami dans l'espace admin, elle apparaît
+automatiquement dans la section "Événements" (À venir) du site public :
+- **Soirée Bar / Guinguette** → affichée avec le nom du lieu (champ "Nom du lieu" du formulaire) ;
+- **Mariage / Anniversaire / Séminaire** → affichée de façon anonyme sous le libellé "Soirée privée",
+  sans nom du client ni lieu, pour préserver la confidentialité de tes clients.
+
 ### 1. Créer le projet Firebase (gratuit)
 
 1. Aller sur [console.firebase.google.com](https://console.firebase.google.com) et créer un projet

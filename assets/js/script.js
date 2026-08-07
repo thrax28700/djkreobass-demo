@@ -230,7 +230,28 @@ function renderPricing(pricing) {
 }
 
 /* ── Événements (rendu + filtre) ── */
-let allEvents = [];
+let allEvents     = [];
+let staticEvents  = [];
+let liveEvents    = [];
+
+const MONTHS_ABBR_FR = ['jan','fév','mar','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+function eventSortKey(event) {
+  const [dayStr, monthStr, yearStr] = (event.date || '').split(' ');
+  const day   = parseInt(dayStr, 10) || 1;
+  const year  = parseInt(yearStr, 10) || 0;
+  const monthIndex = MONTHS_ABBR_FR.findIndex(m => (monthStr || '').toLowerCase().startsWith(m.slice(0, 3)));
+  return new Date(year, monthIndex >= 0 ? monthIndex : 0, day).getTime();
+}
+
+function mergeAndRenderEvents() {
+  const merged = [...staticEvents, ...liveEvents].sort((a, b) => eventSortKey(a) - eventSortKey(b));
+  renderEvents(merged);
+}
+
+window.addEventListener('kb:confirmed-events', e => {
+  liveEvents = e.detail || [];
+  mergeAndRenderEvents();
+});
 
 function renderEvents(events) {
   allEvents = events;
@@ -241,6 +262,7 @@ function renderEvents(events) {
     const day   = parts[0] || '';
     const month = parts.slice(1).join(' ');
     const isPast = event.status === 'past';
+    const isBookable = event.bookable !== false;
     return `
     <div class="event-item reveal ${isPast ? 'event-past' : ''}" data-status="${escapeHtml(event.status)}" role="listitem">
       <div class="event-date-box">
@@ -250,20 +272,24 @@ function renderEvents(events) {
       <div class="event-details">
         <h3 class="event-venue">${escapeHtml(event.venue)}</h3>
         <div class="event-meta">
+          ${event.city ? `
           <span class="event-city">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             ${escapeHtml(event.city)}
-          </span>
+          </span>` : ''}
+          ${event.time ? `
           <span class="event-time">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             ${escapeHtml(event.time)}
-          </span>
+          </span>` : ''}
         </div>
       </div>
       <div class="event-status">
         ${isPast
           ? '<span class="status-badge past">Terminé</span>'
-          : '<a href="#contact" class="btn btn-sm btn-primary">Réserver</a>'}
+          : (isBookable
+              ? '<a href="#contact" class="btn btn-sm btn-primary">Réserver</a>'
+              : '<span class="status-badge confirmed">Confirmée</span>')}
       </div>
     </div>`;
   }).join('');
@@ -303,7 +329,8 @@ function escapeHtml(str) {
     .then(res => res.json())
     .then(data => {
       renderMixes(data.mixes || []);
-      renderEvents(data.events || []);
+      staticEvents = data.events || [];
+      mergeAndRenderEvents();
       renderPricing(data.pricing || []);
       initReveal();
     })
@@ -389,6 +416,16 @@ function animateCounter(el, target) {
   }, 25);
 }
 
+/* ── Champ "Nom du lieu" : visible uniquement pour les soirées publiques (bar/guinguette) ── */
+(function initVenueFieldToggle() {
+  const select = document.getElementById('event_type');
+  const group  = document.getElementById('venue_name_group');
+  if (!select || !group) return;
+  const sync = () => { group.hidden = select.value !== 'bar'; };
+  select.addEventListener('change', sync);
+  sync();
+})();
+
 /* ── Contact form (réservation Firestore + notification Formspree) ── */
 (function initContactForm() {
   const form    = document.getElementById('contact-form');
@@ -457,6 +494,7 @@ function animateCounter(el, target) {
             eventType: eventType.value,
             date: dateValue,
             message: message.value,
+            venueName: eventType.value === 'bar' ? (form.querySelector('#venue_name')?.value.trim() || '') : '',
           });
         } catch (bookingErr) {
           if (bookingErr.message === 'date-taken') {

@@ -7,8 +7,13 @@ import {
   runTransaction, serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-const DAYS_FR   = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const MONTHS_FR   = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const MONTHS_ABBR = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
+const DAYS_FR      = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const EVENT_LABELS = {
+  wedding: 'Mariage', birthday: 'Anniversaire', corporate: 'Séminaire / Entreprise',
+  bar: 'Soirée Bar / Guinguette', other: 'Autre',
+};
 
 let db = null;
 let availability = {};      // { 'YYYY-MM-DD': { status, eventType } }
@@ -113,6 +118,22 @@ function renderMonth() {
   });
 }
 
+/* Convertit une entrée du calendrier public en item d'agenda ("À venir" / "Passés").
+   Les soirées privées (mariage, anniversaire, séminaire) restent anonymes : ni nom
+   du client, ni lieu — seules les soirées publiques (bar/guinguette) affichent le lieu. */
+function calendarEntryToAgendaEvent(dateId, entry) {
+  const [y, m, d] = dateId.split('-').map(Number);
+  const isPublic = entry.eventType === 'bar';
+  return {
+    date: `${pad(d)} ${MONTHS_ABBR[m - 1]} ${y}`,
+    venue: isPublic ? (entry.venueName || EVENT_LABELS.bar) : 'Soirée privée',
+    city: isPublic ? 'Centre-Val de Loire' : '',
+    time: '',
+    status: dateId >= toDateId(new Date()) ? 'upcoming' : 'past',
+    bookable: false,
+  };
+}
+
 function initFirestoreListener() {
   if (!window.FIREBASE_READY) return;
   try {
@@ -120,8 +141,15 @@ function initFirestoreListener() {
     db = getFirestore(app);
     onSnapshot(collection(db, 'calendar'), snap => {
       availability = {};
-      snap.forEach(d => { availability[d.id] = d.data(); });
+      const confirmedEvents = [];
+      snap.forEach(d => {
+        availability[d.id] = d.data();
+        if (d.data().status === 'confirmed') {
+          confirmedEvents.push(calendarEntryToAgendaEvent(d.id, d.data()));
+        }
+      });
       renderMonth();
+      window.dispatchEvent(new CustomEvent('kb:confirmed-events', { detail: confirmedEvents }));
     }, err => console.error('Erreur de synchronisation du calendrier :', err));
   } catch (err) {
     console.error('Erreur d’initialisation Firebase :', err);
@@ -132,7 +160,7 @@ function initFirestoreListener() {
 window.Booking = {
   getSelectedDate: () => selectedDate,
 
-  async createBooking({ name, email, phone, eventType, date, message }) {
+  async createBooking({ name, email, phone, eventType, date, message, venueName }) {
     if (!window.FIREBASE_READY) {
       throw new Error('not-configured');
     }
@@ -143,15 +171,20 @@ window.Booking = {
 
     const calendarRef = doc(db, 'calendar', date);
     const bookingRef   = doc(collection(db, 'bookings'));
+    const isPublicVenue = eventType === 'bar' && venueName;
 
     await runTransaction(db, async (tx) => {
       const existing = await tx.get(calendarRef);
       if (existing.exists()) {
         throw new Error('date-taken');
       }
-      tx.set(calendarRef, { date, eventType, status: 'pending' });
+      tx.set(calendarRef, {
+        date, eventType, status: 'pending',
+        ...(isPublicVenue ? { venueName } : {}),
+      });
       tx.set(bookingRef, {
         name, email, phone: phone || '', eventType, date, message,
+        venueName: venueName || '',
         status: 'pending',
         source: 'site',
         createdAt: serverTimestamp(),

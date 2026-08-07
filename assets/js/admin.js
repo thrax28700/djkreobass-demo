@@ -112,6 +112,7 @@ function runAdmin() {
             <h3>${escapeHtml(b.name || 'Sans nom')}</h3>
             <p class="admin-booking-meta">
               ${escapeHtml(EVENT_LABELS[b.eventType] || b.eventType || 'Non précisé')}
+              ${b.venueName ? ` · ${escapeHtml(b.venueName)}` : ''}
               ${b.source === 'manual' ? ' · ajout manuel' : ''}
             </p>
             ${b.email ? `<p class="admin-booking-contact">✉ ${escapeHtml(b.email)}</p>` : ''}
@@ -144,8 +145,10 @@ function runAdmin() {
       if (action === 'confirm') {
         await updateDoc(doc(db, 'bookings', id), { status: 'confirmed' });
         if (booking.date) {
+          const isPublicVenue = booking.eventType === 'bar' && booking.venueName;
           await setDoc(doc(db, 'calendar', booking.date), {
             date: booking.date, eventType: booking.eventType || 'other', status: 'confirmed',
+            ...(isPublicVenue ? { venueName: booking.venueName } : {}),
           });
         }
       } else if (action === 'decline') {
@@ -187,13 +190,20 @@ function runAdmin() {
   cancelBtn.addEventListener('click', () => { modal.hidden = true; addForm.reset(); addError.hidden = true; });
   modal.addEventListener('click', e => { if (e.target === modal) { modal.hidden = true; } });
 
+  const mbEventType  = document.getElementById('mb-event-type');
+  const mbVenueGroup = document.getElementById('mb-venue-group');
+  const syncVenueField = () => { mbVenueGroup.hidden = mbEventType.value !== 'bar'; };
+  mbEventType.addEventListener('change', syncVenueField);
+  syncVenueField();
+
   addForm.addEventListener('submit', async e => {
     e.preventDefault();
     addError.hidden = true;
     const name      = document.getElementById('mb-name').value.trim();
-    const eventType = document.getElementById('mb-event-type').value;
+    const eventType = mbEventType.value;
     const date      = document.getElementById('mb-date').value;
     const note      = document.getElementById('mb-note').value.trim();
+    const venueName = eventType === 'bar' ? document.getElementById('mb-venue').value.trim() : '';
 
     if (!name || !date) {
       addError.textContent = 'Nom et date sont requis.';
@@ -204,13 +214,18 @@ function runAdmin() {
     const btn = addForm.querySelector('button[type="submit"]');
     btn.disabled = true;
     try {
+      const isPublicVenue = eventType === 'bar' && venueName;
       await setDoc(doc(collection(db, 'bookings')), {
-        name, eventType, date, message: note, email: '', phone: '',
+        name, eventType, date, message: note, email: '', phone: '', venueName,
         status: 'confirmed', source: 'manual', createdAt: serverTimestamp(),
       });
-      await setDoc(doc(db, 'calendar', date), { date, eventType, status: 'confirmed' });
+      await setDoc(doc(db, 'calendar', date), {
+        date, eventType, status: 'confirmed',
+        ...(isPublicVenue ? { venueName } : {}),
+      });
       modal.hidden = true;
       addForm.reset();
+      syncVenueField();
     } catch (err) {
       addError.textContent = 'Erreur : ' + err.message;
       addError.hidden = false;
