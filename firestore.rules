@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* Réservations complètes (nom, email, message...) — jamais publiques */
+    match /bookings/{bookingId} {
+      /* Admin connecté (DJ ou son ami) : création libre (ajout manuel) */
+      allow create: if request.auth != null
+                    || ( request.resource.data.status == 'pending'
+                         && request.resource.data.keys().hasOnly(
+                              ['name','email','phone','eventType','date','message','status','createdAt','source'])
+                         && request.resource.data.name is string
+                         && request.resource.data.name.size() > 0
+                         && request.resource.data.name.size() < 120
+                         && request.resource.data.email is string
+                         && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+[.][^@\\s]+$')
+                         && request.resource.data.eventType is string
+                         && request.resource.data.date is string
+                         && request.resource.data.message is string
+                         && request.resource.data.message.size() < 2000 );
+      allow read, update, delete: if request.auth != null;
+    }
+
+    /* Disponibilité du calendrier — lecture publique, sans données personnelles */
+    match /calendar/{dateId} {
+      allow read: if true;
+      /* Admin connecté : peut créer/écraser librement (réservation manuelle) */
+      allow create: if request.auth != null
+                    || ( request.resource.data.status == 'pending'
+                         && request.resource.data.keys().hasOnly(['date','eventType','status'])
+                         && request.resource.data.date is string
+                         && request.resource.data.eventType is string
+                         && !exists(/databases/$(database)/documents/calendar/$(dateId)) );
+      allow update, delete: if request.auth != null;
+    }
+  }
+}

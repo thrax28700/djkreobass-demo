@@ -389,16 +389,26 @@ function animateCounter(el, target) {
   }, 25);
 }
 
-/* ── Contact form (envoi AJAX vers Formspree) ── */
+/* ── Contact form (réservation Firestore + notification Formspree) ── */
 (function initContactForm() {
   const form    = document.getElementById('contact-form');
   const success = document.getElementById('form-success');
+  const calEl   = document.getElementById('booking-calendar');
   if (!form) return;
 
+  function showResult(message, isError) {
+    success.textContent = message;
+    success.style.color = isError ? '#E05C2A' : '';
+    success.hidden = false;
+  }
+
   form.addEventListener('submit', async e => {
+    e.preventDefault();
+
     const name    = form.querySelector('#name');
     const email   = form.querySelector('#email');
     const message = form.querySelector('#message');
+    const eventType = form.querySelector('#event_type');
     let valid = true;
 
     [name, email, message].forEach(field => {
@@ -414,37 +424,69 @@ function animateCounter(el, target) {
       valid = false;
     }
 
+    const firebaseReady = window.FIREBASE_READY && window.Booking;
+    let dateValue = form.querySelector('#event_date')?.value || '';
+    calEl?.classList.remove('cal-error');
+
+    if (firebaseReady) {
+      dateValue = window.Booking.getSelectedDate();
+      if (!dateValue) {
+        calEl?.classList.add('cal-error');
+        valid = false;
+      }
+    }
+
     if (!valid) {
-      e.preventDefault();
       const firstInvalid = form.querySelector('[style*="CC5500"]');
-      firstInvalid?.focus();
+      firstInvalid?.focus() || calEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
-    e.preventDefault();
     const btn = form.querySelector('button[type="submit"]');
     const originalLabel = btn.innerHTML;
     btn.disabled = true;
     btn.textContent = 'Envoi en cours…';
 
     try {
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-
-      if (response.ok) {
-        success.textContent = `Merci ${name.value} ! Votre demande a bien été envoyée. DJ KREOBASS vous répondra très bientôt.`;
-        success.hidden = false;
-        form.reset();
-      } else {
-        throw new Error('Réponse serveur invalide');
+      if (firebaseReady) {
+        try {
+          await window.Booking.createBooking({
+            name: name.value,
+            email: email.value,
+            phone: '',
+            eventType: eventType.value,
+            date: dateValue,
+            message: message.value,
+          });
+        } catch (bookingErr) {
+          if (bookingErr.message === 'date-taken') {
+            showResult('Cette date vient d’être réservée par quelqu’un d’autre — merci de choisir une autre date dans le calendrier.', true);
+            return;
+          }
+          throw bookingErr;
+        }
       }
+
+      /* Notification email best-effort (n'empêche pas la réservation d'être validée) */
+      try {
+        await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+      } catch (notifyErr) {
+        console.error('Notification email non envoyée :', notifyErr);
+      }
+
+      showResult(
+        firebaseReady
+          ? `Merci ${name.value} ! Ta demande pour le ${dateValue.split('-').reverse().join('/')} est enregistrée et en attente de confirmation. DJ KREOBASS te répondra très bientôt.`
+          : `Merci ${name.value} ! Votre demande a bien été envoyée. DJ KREOBASS vous répondra très bientôt.`,
+        false
+      );
+      form.reset();
     } catch (err) {
-      success.textContent = "Une erreur est survenue lors de l'envoi. Merci de réessayer ou de contacter DJ KREOBASS directement via Facebook.";
-      success.style.color = '#E05C2A';
-      success.hidden = false;
+      showResult("Une erreur est survenue lors de l'envoi. Merci de réessayer ou de contacter DJ KREOBASS directement via Facebook.", true);
       console.error(err);
     } finally {
       btn.disabled = false;

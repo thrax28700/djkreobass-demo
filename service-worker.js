@@ -1,12 +1,16 @@
 'use strict';
 
-const CACHE_NAME = 'djkreobass-v1';
+const CACHE_NAME = 'djkreobass-v2';
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './admin.html',
   './manifest.json',
+  './admin-manifest.json',
   './assets/css/style.css',
+  './assets/css/admin.css',
   './assets/js/script.js',
+  './assets/js/firebase-config.js',
   './data/data.json',
   './assets/images/logo.png',
   './assets/images/hero.png',

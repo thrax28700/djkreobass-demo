@@ -64,6 +64,7 @@ body {
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 button, input, select, textarea { font-family: inherit; }
+[hidden] { display: none !important; }
 
 /* ── Fond texture dorée verrouillée ── */
 .flag-background {
@@ -977,6 +978,124 @@ nav, section, footer { position: relative; z-index: 2; }
 .form-group select option { background: var(--bg3); color: var(--text); }
 .form-group textarea { resize: vertical; min-height: 120px; }
 input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(1) saturate(3) hue-rotate(15deg) opacity(0.7); }
+
+/* ══════════════════════════
+   CALENDRIER DE RÉSERVATION
+══════════════════════════ */
+.booking-calendar {
+  background: rgba(212,175,55,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+.booking-calendar.cal-error {
+  border-color: #E05C2A;
+  box-shadow: 0 0 0 3px rgba(224,92,42,0.18);
+}
+.cal-unavailable {
+  color: var(--text3);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 12px 4px;
+}
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.cal-title {
+  font-family: var(--f-display);
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  color: var(--or);
+  text-transform: uppercase;
+}
+.cal-nav {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-or);
+  background: transparent;
+  color: var(--or);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: var(--t);
+}
+.cal-nav:hover { background: rgba(212,175,55,0.12); }
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.cal-weekdays span {
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.02);
+  color: var(--text2);
+  font-size: 0.85rem;
+  font-family: var(--f-body);
+  cursor: pointer;
+  transition: var(--t);
+}
+.cal-day.empty { visibility: hidden; cursor: default; }
+.cal-day.available:hover { border-color: var(--border-or); background: rgba(212,175,55,0.1); color: var(--or); }
+.cal-day.selected { background: var(--grad-or); color: #100C00; font-weight: 700; border-color: transparent; }
+.cal-day.pending {
+  background: rgba(212,175,55,0.08);
+  color: var(--or2);
+  border-color: rgba(212,175,55,0.3);
+  cursor: not-allowed;
+}
+.cal-day.confirmed {
+  background: rgba(140,106,47,0.1);
+  color: var(--text3);
+  border-color: rgba(140,106,47,0.2);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.cal-day.past {
+  color: var(--text3);
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.cal-day[disabled] { pointer-events: none; }
+.cal-legend {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 0.72rem;
+  color: var(--text3);
+}
+.cal-legend span { display: flex; align-items: center; gap: 6px; }
+.cal-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.cal-dot.available { background: rgba(255,255,255,0.15); }
+.cal-dot.pending    { background: var(--or2); }
+.cal-dot.confirmed  { background: var(--bronze); }
+.cal-selected {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--text2);
+  text-align: center;
+}
+.cal-selected strong { color: var(--or); }
 
 /* ══════════════════════════
    FOOTER

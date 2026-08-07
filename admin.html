@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ KREOBASS | Espace Admin — Réservations</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#050504">
+
+  <link rel="manifest" href="admin-manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/icon-180.png">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+  <div class="flag-background" aria-hidden="true"></div>
+
+  <header class="admin-topbar">
+    <a href="index.html" class="admin-brand">
+      <img src="assets/images/logo.png" alt="Logo DJ KREOBASS">
+      <span>Espace Admin</span>
+    </a>
+    <button id="logout-btn" class="btn btn-outline btn-sm" hidden>Déconnexion</button>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- ═══════ LOGIN ═══════ -->
+    <section id="login-view" class="admin-login">
+      <div class="admin-card admin-login-card">
+        <h1>Connexion</h1>
+        <p class="admin-sub">Accès réservé à DJ KREOBASS et à son équipe.</p>
+        <div id="firebase-warning" class="admin-warning" hidden>
+          Firebase n'est pas encore configuré (voir <code>assets/js/firebase-config.js</code>).
+        </div>
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Mot de passe</label>
+            <input type="password" id="login-password" required autocomplete="current-password">
+          </div>
+          <p id="login-error" class="admin-error" hidden></p>
+          <button type="submit" class="btn btn-primary btn-full">Se connecter</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ═══════ DASHBOARD ═══════ -->
+    <section id="dashboard-view" class="admin-dashboard" hidden>
+      <div class="admin-stats">
+        <div class="admin-stat"><span id="stat-pending">0</span><small>En attente</small></div>
+        <div class="admin-stat"><span id="stat-confirmed">0</span><small>Confirmées</small></div>
+        <div class="admin-stat"><span id="stat-declined">0</span><small>Refusées</small></div>
+      </div>
+
+      <div class="admin-toolbar">
+        <div class="admin-filters" role="group" aria-label="Filtrer">
+          <button class="filter-btn active" data-filter="pending">En attente</button>
+          <button class="filter-btn" data-filter="confirmed">Confirmées</button>
+          <button class="filter-btn" data-filter="declined">Refusées</button>
+          <button class="filter-btn" data-filter="all">Toutes</button>
+        </div>
+        <button id="add-booking-btn" class="btn btn-bleu btn-sm">+ Réservation manuelle</button>
+      </div>
+
+      <div id="bookings-list" class="admin-bookings"></div>
+      <p id="bookings-empty" class="admin-empty" hidden>Aucune réservation dans cette catégorie.</p>
+    </section>
+
+  </main>
+
+  <!-- ═══════ MODALE : réservation manuelle ═══════ -->
+  <div id="add-booking-modal" class="admin-modal" hidden>
+    <div class="admin-modal-card">
+      <h2>Réservation manuelle</h2>
+      <p class="admin-sub">Pour une réservation prise par téléphone ou en direct — confirmée immédiatement.</p>
+      <form id="add-booking-form" novalidate>
+        <div class="form-group">
+          <label for="mb-name">Nom du client</label>
+          <input type="text" id="mb-name" required maxlength="120">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="mb-event-type">Type d'événement</label>
+            <select id="mb-event-type">
+              <option value="wedding">Mariage</option>
+              <option value="birthday">Anniversaire</option>
+              <option value="corporate">Séminaire / Entreprise</option>
+              <option value="bar">Soirée Bar / Guinguette</option>
+              <option value="other">Autre</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="mb-date">Date</label>
+            <input type="date" id="mb-date" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="mb-note">Note (téléphone, détails…)</label>
+          <textarea id="mb-note" rows="3" maxlength="1000"></textarea>
+        </div>
+        <p id="add-booking-error" class="admin-error" hidden></p>
+        <div class="admin-modal-actions">
+          <button type="button" class="btn btn-outline" id="cancel-booking-btn">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/firebase-config.js"></script>
+  <script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>
