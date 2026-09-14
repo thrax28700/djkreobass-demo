@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'djkreobass-v2';
+const CACHE_NAME = 'djkreobass-v3';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -34,21 +34,21 @@ self.addEventListener('activate', event => {
   );
 });
 
+/* Réseau en priorité (le site est en développement actif) : garantit que chaque
+   visite affiche la dernière version déployée ; le cache ne sert que de secours
+   hors-ligne, jamais de version obsolète pendant que le réseau fonctionne. */
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      const network = fetch(event.request)
-        .then(response => {
-          if (response && response.status === 200 && response.type === 'basic') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+    fetch(event.request)
+      .then(response => {
+        if (response && response.status === 200 && response.type === 'basic') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

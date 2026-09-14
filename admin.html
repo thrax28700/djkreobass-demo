@@ -26,7 +26,7 @@
       <img src="assets/images/logo.png" alt="Logo DJ KREOBASS">
       <span>Espace Admin</span>
     </a>
-    <button id="logout-btn" class="btn btn-outline btn-sm" hidden>Déconnexion</button>
+    <button type="button" id="logout-btn" class="btn btn-outline btn-sm" hidden>Déconnexion</button>
   </header>
 
   <main class="admin-main">
@@ -64,12 +64,12 @@
 
       <div class="admin-toolbar">
         <div class="admin-filters" role="group" aria-label="Filtrer">
-          <button class="filter-btn active" data-filter="pending">En attente</button>
-          <button class="filter-btn" data-filter="confirmed">Confirmées</button>
-          <button class="filter-btn" data-filter="declined">Refusées</button>
-          <button class="filter-btn" data-filter="all">Toutes</button>
+          <button type="button" class="filter-btn active" data-filter="pending">En attente</button>
+          <button type="button" class="filter-btn" data-filter="confirmed">Confirmées</button>
+          <button type="button" class="filter-btn" data-filter="declined">Refusées</button>
+          <button type="button" class="filter-btn" data-filter="all">Toutes</button>
         </div>
-        <button id="add-booking-btn" class="btn btn-bleu btn-sm">+ Réservation manuelle</button>
+        <button type="button" id="add-booking-btn" class="btn btn-bleu btn-sm">+ Réservation manuelle</button>
       </div>
 
       <div id="bookings-list" class="admin-bookings"></div>

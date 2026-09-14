@@ -264,7 +264,7 @@ function renderEvents(events) {
     const isPast = event.status === 'past';
     const isBookable = event.bookable !== false;
     return `
-    <div class="event-item reveal ${isPast ? 'event-past' : ''}" data-status="${escapeHtml(event.status)}" role="listitem">
+    <li class="event-item reveal ${isPast ? 'event-past' : ''}" data-status="${escapeHtml(event.status)}">
       <div class="event-date-box">
         <span class="event-day">${escapeHtml(day)}</span>
         <span class="event-month">${escapeHtml(month)}</span>
@@ -291,7 +291,7 @@ function renderEvents(events) {
               ? '<a href="#contact" class="btn btn-sm btn-primary">Réserver</a>'
               : '<span class="status-badge confirmed">Confirmée</span>')}
       </div>
-    </div>`;
+    </li>`;
   }).join('');
 
   initEventsFilter();
