@@ -441,7 +441,7 @@
             <label for="message">Message <abbr title="requis">*</abbr></label>
             <textarea id="message" name="message" rows="5" required placeholder="Décrivez votre événement, lieu, nombre de personnes, ambiance souhaitée…" maxlength="2000"></textarea>
           </div>
-          <input type="text" name="_gotcha" style="display:none">
+          <input type="text" name="_gotcha" class="form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button type="submit" class="btn btn-primary btn-full">
             Envoyer la demande
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
