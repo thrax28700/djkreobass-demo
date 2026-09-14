@@ -142,13 +142,40 @@ function genreColor(genre) {
   return '';
 }
 
-/* ── Mixes (rendu + play/pause) ── */
+/* ── Mixes (rendu + lecteur SoundCloud) ── */
+function isPlayableSoundcloud(url) {
+  return typeof url === 'string' && /^https?:\/\/(www\.)?(soundcloud\.com|on\.soundcloud\.com)\//.test(url);
+}
+
+function soundcloudEmbedSrc(url) {
+  const params = new URLSearchParams({
+    url,
+    color: '#d4af37',
+    auto_play: 'false',
+    hide_related: 'true',
+    show_comments: 'false',
+    show_user: 'true',
+    show_reposts: 'false',
+    show_teaser: 'false',
+    visual: 'false',
+  });
+  return `https://w.soundcloud.com/player/?${params.toString()}`;
+}
+
 function renderMixes(mixes) {
   const grid = document.getElementById('mixes-grid');
   if (!grid) return;
-  grid.innerHTML = mixes.map((mix, i) => `
-    <article class="mix-card reveal" data-index="${i}" aria-label="${escapeHtml(mix.title)}">
-      <div class="mix-artwork">
+  grid.innerHTML = mixes.map((mix, i) => {
+    const playable = isPlayableSoundcloud(mix.soundcloud_url);
+    return `
+    <article class="mix-card ${playable ? 'mix-card-live' : ''} reveal" data-index="${i}" aria-label="${escapeHtml(mix.title)}">
+      <div class="mix-artwork ${playable ? 'has-player' : ''}">
+        ${playable ? `
+        <iframe class="mix-soundcloud" width="100%" height="100%" scrolling="no" frameborder="no"
+                loading="lazy" allow="autoplay"
+                title="Lecteur SoundCloud — ${escapeHtml(mix.title)}"
+                src="${soundcloudEmbedSrc(mix.soundcloud_url)}"></iframe>
+        ` : `
         <div class="mix-artwork-placeholder">
           <div class="vinyl-disc"><div class="vinyl-center"></div></div>
         </div>
@@ -156,22 +183,29 @@ function renderMixes(mixes) {
           <svg class="play-icon"  viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
         </button>
+        `}
       </div>
       <div class="mix-info">
         <h3 class="mix-title">${escapeHtml(mix.title)}</h3>
-        <span class="mix-genre ${genreColor(mix.genre)}">${escapeHtml(mix.genre)}</span>
+        ${mix.genre
+          ? `<span class="mix-genre ${genreColor(mix.genre)}">${escapeHtml(mix.genre)}</span>`
+          : (playable ? '<span class="mix-genre mix-genre-live">SoundCloud</span>' : '')}
+        ${(mix.duration || mix.year) ? `
         <div class="mix-meta">
+          ${mix.duration ? `
           <span class="mix-duration">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             ${escapeHtml(mix.duration)}
-          </span>
-          <span class="mix-date">${escapeHtml(mix.year)}</span>
-        </div>
+          </span>` : ''}
+          ${mix.year ? `<span class="mix-date">${escapeHtml(mix.year)}</span>` : ''}
+        </div>` : ''}
+        ${!playable ? `
         <div class="mix-waveform" aria-hidden="true">
           ${randomWaveform(i)}
-        </div>
+        </div>` : ''}
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
 
   initMixCards();
 }

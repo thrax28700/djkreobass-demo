@@ -622,11 +622,18 @@ nav, section, footer { position: relative; z-index: 2; }
   box-shadow: var(--shadow), 0 0 30px rgba(212,175,55,0.15);
   border-color: var(--border-or);
 }
+.mix-card-live { cursor: default; border-color: var(--border-or); }
 .mix-artwork {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
 }
+.mix-artwork.has-player {
+  aspect-ratio: auto;
+  height: 166px;
+  background: var(--bg3);
+}
+.mix-soundcloud { display: block; border: 0; }
 .mix-artwork-placeholder {
   width: 100%;
   height: 100%;
@@ -687,6 +694,7 @@ nav, section, footer { position: relative; z-index: 2; }
   color: var(--or); background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25);
 }
 .mix-genre.g-bleu  { color: var(--or2); background: rgba(140,106,47,0.14); border-color: rgba(140,106,47,0.3); }
+.mix-genre-live    { color: #ff7700; background: rgba(255,119,0,0.1); border-color: rgba(255,119,0,0.3); }
 .mix-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text3); margin-bottom: 12px; }
 .mix-duration { display: flex; align-items: center; gap: 5px; }
 .mix-duration svg { width: 13px; height: 13px; }
