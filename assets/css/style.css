@@ -808,6 +808,28 @@ nav, section, footer { position: relative; z-index: 2; }
 .reviews-widget .btn { margin: 0 auto; }
 
 /* ══════════════════════════
+   VIDÉOS
+══════════════════════════ */
+.videos { padding: 120px 0; }
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.video-card {
+  position: relative;
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #000;
+  aspect-ratio: 9 / 16;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+.video-card-wide { grid-column: span 2; aspect-ratio: 16 / 9; }
+.video-card:hover { border-color: var(--border-or); box-shadow: var(--shadow), 0 0 30px rgba(212,175,55,0.15); }
+.video-card video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
+
+/* ══════════════════════════
    EVENTS
 ══════════════════════════ */
 .events {
@@ -1189,6 +1211,8 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(
   .about-image { max-width: 380px; margin: 0 auto; }
   .contact-grid { grid-template-columns: 1fr; gap: 48px; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .videos-grid { grid-template-columns: repeat(2, 1fr); }
+  .video-card-wide { grid-column: span 2; }
   .footer-content { grid-template-columns:1fr; text-align:center; }
   .footer-socials { justify-content:center; }
   .footer-brand { justify-content: center; }
@@ -1225,6 +1249,8 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(
   .form-row { grid-template-columns:1fr; }
   .contact-form { padding:24px; }
   .gallery-grid { grid-template-columns: 1fr; }
+  .videos-grid { grid-template-columns: 1fr; }
+  .video-card-wide { grid-column: span 1; }
   .pricing-grid { grid-template-columns: 1fr; }
   .reviews-highlights { grid-template-columns: 1fr; }
 }

@@ -1,0 +1,3 @@
+# Fichiers vidéo source bruts (traités puis exclus — trop volumineux pour Git)
+/Download*.mp4
+/Download*.json
