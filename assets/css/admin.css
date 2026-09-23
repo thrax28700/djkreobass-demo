@@ -78,6 +78,26 @@
   margin-bottom: 8px;
 }
 
+.admin-tabs { display: flex; gap: 8px; margin-bottom: 28px; border-bottom: 1px solid var(--border); }
+.admin-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  font-family: var(--f-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 10px 4px;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: color var(--t), border-color var(--t);
+}
+.admin-tab + .admin-tab { margin-left: 20px; }
+.admin-tab:hover { color: var(--or2); }
+.admin-tab.active { color: var(--or); border-bottom-color: var(--or); }
+
 .admin-stats { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
 .admin-stat {
   flex: 1;
@@ -206,10 +226,81 @@
 }
 .admin-modal-card .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .admin-modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+.admin-modal-card-lg { max-width: 640px; }
+
+/* ── Devis & Factures : formulaire de prestations ── */
+.q-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.q-item-row {
+  display: grid;
+  grid-template-columns: 1fr 60px 90px 32px;
+  gap: 8px;
+  align-items: center;
+}
+.q-item-row input {
+  width: 100%;
+  background: rgba(212,175,55,0.04);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 10px;
+  color: var(--text);
+  font-size: 0.88rem;
+  outline: none;
+}
+.q-item-remove {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: var(--t);
+}
+.q-item-remove:hover { border-color: #E05C2A; color: #E5905C; }
+.q-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-family: var(--f-display);
+  font-size: 1.15rem;
+  letter-spacing: 1px;
+  color: var(--or);
+}
+
+/* ── Devis & Factures : cartes de la liste ── */
+.admin-booking.status-sent     { border-left-color: var(--or2); }
+.admin-booking.status-accepted { border-left-color: #6FBF6F; }
+.admin-booking.status-declined { opacity: 0.6; border-left-color: var(--text3); }
+.admin-booking.status-invoiced { border-left-color: var(--bronze); }
+.admin-booking.status-paid     { border-left-color: #6FBF6F; }
+.admin-status-badge.status-accepted, .admin-status-badge.status-paid {
+  background: rgba(111,191,111,0.12); color: #8FDD8F; border-color: rgba(111,191,111,0.3);
+}
+.admin-status-badge.status-declined {
+  background: rgba(224,92,42,0.1); color: #E5905C; border-color: rgba(224,92,42,0.3);
+}
+.admin-status-badge.status-invoiced {
+  background: rgba(140,106,47,0.14); color: var(--or2); border-color: rgba(140,106,47,0.3);
+}
+.admin-quote-total { font-family: var(--f-display); font-size: 1.1rem; color: var(--or); letter-spacing: 1px; }
+.admin-quote-link {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: var(--text3);
+  margin-top: 4px;
+  word-break: break-all;
+}
+.admin-quote-link:hover { color: var(--or); }
 
 @media (max-width: 640px) {
   .admin-booking-main { grid-template-columns: 1fr; gap: 8px; }
   .admin-status-badge { justify-self: start; }
   .admin-modal-card .form-row { grid-template-columns: 1fr; }
   .admin-toolbar { flex-direction: column; align-items: stretch; }
+  .q-item-row { grid-template-columns: 1fr 1fr; grid-template-areas: "label label" "qty price" "remove remove"; }
 }

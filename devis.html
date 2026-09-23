@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ KREOBASS | Votre devis</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#050504">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/icon-180.png">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/devis.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="devis-body">
+
+  <div class="flag-background" aria-hidden="true"></div>
+
+  <header class="devis-topbar">
+    <a href="index.html" class="admin-brand">
+      <img src="assets/images/logo.png" alt="Logo DJ KREOBASS">
+      <span>DJ KREOBASS</span>
+    </a>
+  </header>
+
+  <main class="devis-main">
+
+    <div id="devis-loading" class="devis-state">Chargement du document…</div>
+    <div id="devis-error" class="devis-state devis-state-error" hidden>
+      Ce lien de devis/facture est introuvable ou a expiré. Contacte-nous directement au
+      <a href="tel:+33666359065" class="contact-link">06&nbsp;66&nbsp;35&nbsp;90&nbsp;65</a>.
+    </div>
+
+    <section id="devis-card" class="devis-card" hidden>
+      <div class="devis-card-head">
+        <div>
+          <span class="devis-doc-type" id="devis-doc-type">DEVIS</span>
+          <h1 class="devis-number" id="devis-number"></h1>
+        </div>
+        <span class="devis-status-badge" id="devis-status-badge"></span>
+      </div>
+
+      <div class="devis-meta-grid">
+        <div>
+          <span class="contact-label">Date</span>
+          <span class="contact-value" id="devis-date"></span>
+        </div>
+        <div>
+          <span class="contact-label">Client</span>
+          <span class="contact-value" id="devis-client"></span>
+        </div>
+        <div>
+          <span class="contact-label">Événement</span>
+          <span class="contact-value" id="devis-event"></span>
+        </div>
+      </div>
+
+      <table class="devis-items-table">
+        <thead>
+          <tr><th>Prestation</th><th>Qté</th><th>Prix unitaire</th><th>Total</th></tr>
+        </thead>
+        <tbody id="devis-items-body"></tbody>
+      </table>
+
+      <div class="devis-total-row">
+        <span>Total</span>
+        <span id="devis-total"></span>
+      </div>
+
+      <p class="devis-notes" id="devis-notes" hidden></p>
+      <p class="devis-validity" id="devis-validity" hidden></p>
+
+      <div class="devis-actions">
+        <button type="button" class="btn btn-outline" id="devis-download-btn">
+          Télécharger en PDF
+        </button>
+        <div class="devis-accept-actions" id="devis-accept-actions" hidden>
+          <button type="button" class="btn btn-outline devis-decline-btn" id="devis-decline-btn">Refuser</button>
+          <button type="button" class="btn btn-primary" id="devis-accept-btn">Accepter ce devis</button>
+        </div>
+      </div>
+
+      <p class="devis-response-msg" id="devis-response-msg" hidden></p>
+    </section>
+
+  </main>
+
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/business-info.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="assets/js/pdf-generator.js"></script>
+  <script type="module" src="assets/js/devis-view.js"></script>
+</body>
+</html>

@@ -56,24 +56,60 @@
 
     <!-- ═══════ DASHBOARD ═══════ -->
     <section id="dashboard-view" class="admin-dashboard" hidden>
-      <div class="admin-stats">
-        <div class="admin-stat"><span id="stat-pending">0</span><small>En attente</small></div>
-        <div class="admin-stat"><span id="stat-confirmed">0</span><small>Confirmées</small></div>
-        <div class="admin-stat"><span id="stat-declined">0</span><small>Refusées</small></div>
+
+      <div class="admin-tabs" role="tablist" aria-label="Sections admin">
+        <button type="button" class="admin-tab active" data-tab="bookings">Réservations</button>
+        <button type="button" class="admin-tab" data-tab="quotes">Devis &amp; Factures</button>
       </div>
 
-      <div class="admin-toolbar">
-        <div class="admin-filters" role="group" aria-label="Filtrer">
-          <button type="button" class="filter-btn active" data-filter="pending">En attente</button>
-          <button type="button" class="filter-btn" data-filter="confirmed">Confirmées</button>
-          <button type="button" class="filter-btn" data-filter="declined">Refusées</button>
-          <button type="button" class="filter-btn" data-filter="all">Toutes</button>
+      <!-- ── Onglet Réservations ── -->
+      <div id="tab-bookings" class="admin-tab-panel">
+        <div class="admin-stats">
+          <div class="admin-stat"><span id="stat-pending">0</span><small>En attente</small></div>
+          <div class="admin-stat"><span id="stat-confirmed">0</span><small>Confirmées</small></div>
+          <div class="admin-stat"><span id="stat-declined">0</span><small>Refusées</small></div>
         </div>
-        <button type="button" id="add-booking-btn" class="btn btn-bleu btn-sm">+ Réservation manuelle</button>
+
+        <div class="admin-toolbar">
+          <div class="admin-filters" role="group" aria-label="Filtrer">
+            <button type="button" class="filter-btn active" data-filter="pending">En attente</button>
+            <button type="button" class="filter-btn" data-filter="confirmed">Confirmées</button>
+            <button type="button" class="filter-btn" data-filter="declined">Refusées</button>
+            <button type="button" class="filter-btn" data-filter="all">Toutes</button>
+          </div>
+          <button type="button" id="add-booking-btn" class="btn btn-bleu btn-sm">+ Réservation manuelle</button>
+        </div>
+
+        <div id="bookings-list" class="admin-bookings"></div>
+        <p id="bookings-empty" class="admin-empty" hidden>Aucune réservation dans cette catégorie.</p>
       </div>
 
-      <div id="bookings-list" class="admin-bookings"></div>
-      <p id="bookings-empty" class="admin-empty" hidden>Aucune réservation dans cette catégorie.</p>
+      <!-- ── Onglet Devis & Factures ── -->
+      <div id="tab-quotes" class="admin-tab-panel" hidden>
+        <div id="emailjs-warning" class="admin-warning" hidden>
+          EmailJS n'est pas encore configuré (voir <code>assets/js/emailjs-config.js</code>) — les devis
+          et factures seront générés et enregistrés, mais pas envoyés automatiquement par email.
+        </div>
+        <div id="business-warning" class="admin-warning" hidden>
+          Tes informations légales (SIRET, IBAN…) ne sont pas encore renseignées dans
+          <code>assets/js/business-info.js</code> — à faire avant d'envoyer de vraies factures.
+        </div>
+
+        <div class="admin-toolbar">
+          <div class="admin-filters" role="group" aria-label="Filtrer">
+            <button type="button" class="filter-btn active" data-qfilter="all">Tous</button>
+            <button type="button" class="filter-btn" data-qfilter="sent">Envoyés</button>
+            <button type="button" class="filter-btn" data-qfilter="accepted">Acceptés</button>
+            <button type="button" class="filter-btn" data-qfilter="invoiced">Facturés</button>
+            <button type="button" class="filter-btn" data-qfilter="paid">Payés</button>
+          </div>
+          <button type="button" id="add-quote-btn" class="btn btn-bleu btn-sm">+ Nouveau devis</button>
+        </div>
+
+        <div id="quotes-list" class="admin-bookings"></div>
+        <p id="quotes-empty" class="admin-empty" hidden>Aucun devis/facture dans cette catégorie.</p>
+      </div>
+
     </section>
 
   </main>
@@ -122,7 +158,82 @@
     </div>
   </div>
 
+  <!-- ═══════ MODALE : nouveau devis ═══════ -->
+  <div id="add-quote-modal" class="admin-modal" hidden>
+    <div class="admin-modal-card admin-modal-card-lg">
+      <h2>Nouveau devis</h2>
+      <p class="admin-sub">Génère un devis PDF, l'enregistre et l'envoie au client avec un lien d'acceptation en ligne.</p>
+      <form id="add-quote-form" novalidate>
+        <div class="form-group">
+          <label for="q-booking">Lier à une réservation (optionnel)</label>
+          <select id="q-booking"><option value="">— Aucune —</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="q-name">Nom du client</label>
+            <input type="text" id="q-name" required maxlength="120">
+          </div>
+          <div class="form-group">
+            <label for="q-email">Email du client</label>
+            <input type="email" id="q-email" required maxlength="150">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="q-phone">Téléphone (optionnel)</label>
+            <input type="tel" id="q-phone" maxlength="30">
+          </div>
+          <div class="form-group">
+            <label for="q-event-type">Type d'événement</label>
+            <select id="q-event-type">
+              <option value="wedding">Mariage</option>
+              <option value="birthday">Anniversaire</option>
+              <option value="corporate">Séminaire / Entreprise</option>
+              <option value="bar">Soirée Bar / Guinguette</option>
+              <option value="other">Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="q-date">Date de l'événement (optionnel)</label>
+            <input type="date" id="q-date">
+          </div>
+          <div class="form-group">
+            <label for="q-venue">Lieu (optionnel)</label>
+            <input type="text" id="q-venue" maxlength="120">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Prestations</label>
+          <div id="q-items" class="q-items"></div>
+          <button type="button" class="btn btn-outline btn-sm" id="q-add-item-btn">+ Ajouter une ligne</button>
+        </div>
+
+        <div class="q-total-row"><span>Total</span><span id="q-total-preview">0,00&nbsp;€</span></div>
+
+        <div class="form-group">
+          <label for="q-notes">Notes / conditions (optionnel)</label>
+          <textarea id="q-notes" rows="3" maxlength="1000"></textarea>
+        </div>
+
+        <p id="add-quote-error" class="admin-error" hidden></p>
+        <div class="admin-modal-actions">
+          <button type="button" class="btn btn-outline" id="cancel-quote-btn">Annuler</button>
+          <button type="submit" class="btn btn-primary" id="submit-quote-btn">Générer et envoyer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/business-info.js"></script>
+  <script src="assets/js/emailjs-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="assets/js/pdf-generator.js"></script>
   <script type="module" src="assets/js/admin.js"></script>
 </body>
 </html>

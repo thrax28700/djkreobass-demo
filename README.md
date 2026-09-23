@@ -5,13 +5,19 @@ Site vitrine statique pour DJ KREOBASS, animateur & platiniste professionnel en 
 ## Structure
 
 - `index.html` — page publique du site (avec calendrier de réservation)
-- `admin.html` — espace admin protégé par mot de passe (gestion des réservations)
+- `admin.html` — espace admin protégé par mot de passe (réservations + devis/factures)
+- `devis.html` — page publique où le client consulte et accepte/refuse un devis (lien envoyé par email)
 - `assets/css/style.css` — charte graphique noir & doré + calendrier
 - `assets/css/admin.css` — styles de l'espace admin
+- `assets/css/devis.css` — styles de la page publique devis/facture
 - `assets/js/script.js` — interactions, chargement des données, formulaire, PWA
 - `assets/js/booking.js` — calendrier de réservation public (Firebase Firestore)
-- `assets/js/admin.js` — connexion admin + tableau de bord temps réel (Firebase Auth + Firestore)
+- `assets/js/admin.js` — connexion admin + tableau de bord temps réel (réservations + devis/factures)
+- `assets/js/devis-view.js` — logique de la page publique `devis.html`
+- `assets/js/pdf-generator.js` — génère le PDF d'un devis/facture (utilisé par l'admin et `devis.html`)
 - `assets/js/firebase-config.js` — clés du projet Firebase (à remplacer, voir ci-dessous)
+- `assets/js/emailjs-config.js` — clés EmailJS pour l'envoi automatique des devis/factures (à remplacer)
+- `assets/js/business-info.js` — infos légales (SIRET, IBAN…) utilisées sur les PDF (à remplacer)
 - `firestore.rules` — règles de sécurité Firestore (à coller dans la console Firebase)
 - `data/data.json` — mixes, événements et tarifs (modifiable sans toucher au HTML)
 - `scripts/data_manager.py` — utilitaire CLI pour gérer `data.json` (`python scripts/data_manager.py`)
@@ -64,18 +70,60 @@ Ouvrir `admin.html` (ex : `https://<ton-site>/admin.html`) dans le navigateur du
 connecter avec son compte, puis "Ajouter à l'écran d'accueil" (Chrome/Android) ou "Sur l'écran
 d'accueil" (Safari/iOS) — l'app s'installe comme une app native, avec son propre nom et icône.
 
+## Devis & Factures (envoi automatique par email)
+
+Depuis l'onglet **Devis & Factures** de `admin.html` :
+
+1. Clique **+ Nouveau devis**, remplace-le éventuellement à partir d'une réservation existante
+   (auto-remplit nom/email/date/lieu), ajoute les lignes de prestations (description, quantité, prix).
+2. À la validation, le devis est enregistré dans Firestore, numéroté (`DEV-AAAAMMJJ-HHMMSS`), et un
+   email est envoyé automatiquement au client avec un lien vers `devis.html?id=...`.
+3. Le client ouvre ce lien (sans compte à créer), voit le détail du devis, peut le télécharger en PDF,
+   puis clique **Accepter** ou **Refuser**. La réponse apparaît en temps réel dans l'admin.
+4. Une fois le devis **Accepté**, le bouton **Générer la facture** crée automatiquement la facture
+   correspondante (mêmes lignes), l'envoie au client par email, et marque le devis comme "Facturé".
+5. Quand le client a payé, clique **Marquer payée** sur la facture.
+
+À tout moment : **Télécharger PDF** génère le document (devis ou facture) dans le navigateur, et
+**Renvoyer l'email** ré-expédie le lien si besoin.
+
+### Configurer l'envoi automatique (EmailJS, gratuit)
+
+1. Créer un compte sur [emailjs.com](https://www.emailjs.com) (200 emails/mois gratuits).
+2. **Email Services** → ajouter un service → connecter `deejaykreobass@gmail.com` → copier le
+   **Service ID**.
+3. **Email Templates** → créer un template "Devis" utilisant les variables `to_email`, `to_name`,
+   `quote_number`, `quote_type`, `event_label`, `total`, `valid_until`, `view_link`, `message` →
+   copier le **Template ID**. Dupliquer ce template pour "Facture" (mêmes variables).
+4. **Account** → copier la **Public Key**.
+5. Renseigner ces 4 valeurs dans `assets/js/emailjs-config.js`.
+
+Tant que ce fichier n'est pas configuré, les devis/factures sont quand même créés et téléchargeables
+en PDF — seul l'envoi automatique par email est désactivé (un lien à envoyer manuellement est affiché
+à la place).
+
+### Renseigner les informations légales
+
+Les PDF de devis/factures et la page `devis.html` affichent les informations de
+`assets/js/business-info.js` (nom/raison sociale, adresse, SIRET, mention TVA, IBAN/BIC pour les
+règlements par virement). **À remplir avant d'envoyer une vraie facture** — une facture doit
+légalement mentionner un SIRET. Tant que ce n'est pas fait, l'admin affiche un avertissement.
+
 ## À configurer avant la mise en production
 
-1. **Firebase** : voir la section ci-dessus — indispensable pour que le calendrier fonctionne.
-2. **Formulaire de contact** : le formulaire pointe vers `https://formspree.io/f/VOTRE_ID_FORMSPREE`
+1. **Firebase** : voir la section ci-dessus — indispensable pour que le calendrier et les devis/factures
+   fonctionnent.
+2. **EmailJS** et **informations légales** : voir la section Devis & Factures ci-dessus.
+3. **Formulaire de contact** : le formulaire pointe vers `https://formspree.io/f/VOTRE_ID_FORMSPREE`
    dans `index.html`. Créer un compte gratuit sur [formspree.io](https://formspree.io), créer un
    formulaire, et remplacer `VOTRE_ID_FORMSPREE` par l'identifiant réel fourni. (Sert uniquement de
    notification email — la réservation elle-même est déjà enregistrée dans Firestore.)
-3. **Coordonnées** : téléphone et email dans la section Contact sont des placeholders à remplacer.
-4. **Avis clients** : la section "Avis" est prête à afficher les avis Google dès que la fiche
+4. **Coordonnées** : téléphone (06 66 35 90 65), WhatsApp et email (`deejaykreobass@gmail.com`) sont
+   déjà en place dans la section Contact et le bouton flottant WhatsApp.
+5. **Avis clients** : la section "Avis" est prête à afficher les avis Google dès que la fiche
    établissement Google Business de DJ KREOBASS existe — en attendant elle renvoie vers la page
    Facebook officielle.
-5. **Réseaux sociaux** : liens Instagram/YouTube sont des placeholders (`#`) à remplacer par les
+6. **Réseaux sociaux** : liens Instagram/YouTube sont des placeholders (`#`) à remplacer par les
    vrais comptes.
 
 ## Développement local
@@ -88,7 +136,26 @@ python -m http.server 8000
 # puis ouvrir http://localhost:8000
 ```
 
-## Déploiement
+## Déploiement (Vercel, gratuit)
 
-Le site est 100% statique (HTML/CSS/JS) : il peut être hébergé gratuitement sur GitHub Pages,
-Netlify, Vercel ou tout hébergement statique.
+Le site est 100% statique (HTML/CSS/JS) : Vercel le détecte automatiquement, aucune configuration
+particulière n'est nécessaire.
+
+**Option A — depuis le site Vercel (le plus simple, sans rien installer) :**
+
+1. Aller sur [vercel.com](https://vercel.com/new) et se connecter avec le compte GitHub
+   `thrax28700`.
+2. **Import Git Repository** → choisir `thrax28700/djkreobass-demo`.
+3. Laisser les réglages par défaut (Framework Preset : *Other*) → **Deploy**.
+4. Le site est en ligne en ~30 secondes sur une URL `djkreobass-demo.vercel.app` (personnalisable
+   dans Project Settings → Domains, y compris avec un nom de domaine perso si tu en achètes un).
+5. Chaque `git push` sur `master` redéploie automatiquement le site.
+
+**Option B — en ligne de commande :**
+
+```bash
+npx vercel login     # ouvre une page de connexion dans le navigateur
+npx vercel --prod     # déploie le dossier courant en production
+```
+
+Le site peut aussi être hébergé gratuitement sur GitHub Pages, Netlify ou tout hébergement statique.

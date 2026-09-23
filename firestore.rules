@@ -37,5 +37,22 @@ service cloud.firestore {
                          && !exists(/databases/$(database)/documents/calendar/$(dateId)) );
       allow update, delete: if request.auth != null;
     }
+
+    /* Devis & factures.
+       - "get" (lien direct avec l'ID) est public : c'est ce qui permet au client
+         d'ouvrir devis.html?id=... reçu par email, sans pouvoir lister les autres.
+       - "list" (parcourir toute la collection) reste réservé à l'admin.
+       - Le client peut uniquement faire passer un devis "sent" -> "accepted"/"declined",
+         sans toucher à aucun autre champ (montant, prestations, etc.). */
+    match /quotes/{quoteId} {
+      allow get: if true;
+      allow list: if request.auth != null;
+      allow create, delete: if request.auth != null;
+      allow update: if request.auth != null
+                    || ( resource.data.type == 'devis'
+                         && resource.data.status == 'sent'
+                         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','respondedAt'])
+                         && request.resource.data.status in ['accepted','declined'] );
+    }
   }
 }

@@ -1,16 +1,21 @@
 'use strict';
 
-const CACHE_NAME = 'djkreobass-v3';
+const CACHE_NAME = 'djkreobass-v4';
 const PRECACHE_URLS = [
   './',
   './index.html',
   './admin.html',
+  './devis.html',
   './manifest.json',
   './admin-manifest.json',
   './assets/css/style.css',
   './assets/css/admin.css',
+  './assets/css/devis.css',
   './assets/js/script.js',
   './assets/js/firebase-config.js',
+  './assets/js/business-info.js',
+  './assets/js/emailjs-config.js',
+  './assets/js/pdf-generator.js',
   './data/data.json',
   './assets/images/logo.png',
   './assets/images/hero.png',
