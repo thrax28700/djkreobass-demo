@@ -25,6 +25,28 @@ Site vitrine statique pour DJ KREOBASS, animateur & platiniste professionnel en 
   installables séparément sur mobile/desktop)
 - `assets/images/qrcode-djkreobass.png` — QR code pointant vers la démo en ligne
 
+## Configurateur de tarifs ("Composez votre soirée")
+
+La section Tarifs n'affiche plus de simples fiches statiques : le visiteur choisit d'abord son type
+d'événement (mariage, anniversaire, séminaire, bar/guinguette), puis coche des options (éclairage
+additionnel, machine à fumée, photobooth, sonorisation renforcée, heure supplémentaire, animation
+micro). Un total indicatif s'affiche en direct, et le bouton final pré-remplit automatiquement le
+formulaire de contact (type d'événement + récapitulatif de la configuration dans le message) avant
+de l'envoyer vers la demande de devis.
+
+Tout est piloté par `data/data.json` :
+
+- `pricing[].basePrice` et `pricingOptions[].price` sont à **0 par défaut** → le configurateur
+  affiche alors "Sur devis" au lieu d'un montant. Renseigne un prix indicatif (en euros, nombre, sans
+  symbole) dès que vous avez des tarifs de base à communiquer, et le total se calcule automatiquement.
+- Pour ajouter/retirer une option, modifie le tableau `pricingOptions` (`id`, `label`, `price`). L'
+  icône affichée dépend de l'`id` (`lighting`, `fog`, `photobooth`, `sound`, `hour`, `mc` sont déjà
+  prévus dans `assets/js/script.js` → `OPTION_ICONS` ; pour un nouvel `id`, ajoute son icône SVG dans
+  ce même objet, sinon une icône générique s'affiche).
+- Les 4 formules (`pricing[]`) gardent leur `id` aligné sur les types d'événement du site
+  (`wedding`, `birthday`, `corporate`, `bar`) pour que la sélection remplisse correctement le
+  formulaire de contact.
+
 ## Calendrier de réservation partagé (Firebase)
 
 Le calendrier de réservation (sur le site) et l'espace admin (`admin.html`) partagent la même base

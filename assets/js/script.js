@@ -246,22 +246,148 @@ function initMixCards() {
   });
 }
 
-/* ── Tarifs / Pricing ── */
-function renderPricing(pricing) {
+/* ── Tarifs / Configurateur de soirée ──
+   L'internaute choisit un type d'événement puis des options (éclairage, machine
+   à fumée...) ; le total s'affiche en direct (ou "Sur devis" tant que les prix ne
+   sont pas renseignés dans data.json), et la demande de devis part déjà pré-remplie. */
+const FORMULA_ICONS = {
+  wedding: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="14" r="5"/><circle cx="15" cy="14" r="5"/></svg>',
+  birthday: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z"/></svg>',
+  corporate: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+  bar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>',
+  other: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+};
+const OPTION_ICONS = {
+  lighting:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.5.5 1 1.3 1 2.5h6c0-1.2.5-2 1-2.5A6 6 0 0 0 12 3z"/></svg>',
+  fog:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',
+  photobooth: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+  sound:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><line x1="12" y1="6" x2="12.01" y2="6"/></svg>',
+  hour:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+  mc:         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
+};
+const DEFAULT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/></svg>';
+
+let configFormulas = [];
+let configOptions  = [];
+let selectedFormulaId  = null;
+const selectedOptionIds = new Set();
+
+function fmtEUR(n) {
+  return (Number(n) || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
+}
+
+function renderPricingConfigurator(formulas, options) {
+  configFormulas = formulas || [];
+  configOptions  = options  || [];
+
   const grid = document.getElementById('pricing-grid');
   if (!grid) return;
-  grid.innerHTML = pricing.map(p => `
-    <div class="pricing-card reveal">
-      <div class="pricing-icon">${p.icon}</div>
-      <h3 class="pricing-name">${escapeHtml(p.name)}</h3>
-      <p class="pricing-desc">${escapeHtml(p.description)}</p>
+
+  grid.innerHTML = configFormulas.map(f => `
+    <button type="button" class="pricing-card formula-card reveal" data-formula="${f.id}" aria-pressed="false">
+      <div class="pricing-icon">${FORMULA_ICONS[f.id] || DEFAULT_ICON}</div>
+      <h3 class="pricing-name">${escapeHtml(f.name)}</h3>
+      <p class="pricing-desc">${escapeHtml(f.description)}</p>
       <ul class="pricing-features">
-        ${p.features.map(f => `<li>${escapeHtml(f)}</li>`).join('')}
+        ${f.features.map(ft => `<li>${escapeHtml(ft)}</li>`).join('')}
       </ul>
-      <div class="pricing-quote">Sur devis</div>
-      <a href="#contact" class="btn btn-outline btn-full">Demander un devis</a>
-    </div>`).join('');
+      <div class="pricing-quote">${f.basePrice > 0 ? `à partir de ${fmtEUR(f.basePrice)}` : 'Sur devis'}</div>
+      <span class="formula-check" aria-hidden="true">✓</span>
+    </button>`).join('');
+
+  const optionsGrid = document.getElementById('pricing-options');
+  if (optionsGrid) {
+    optionsGrid.innerHTML = configOptions.map(o => `
+      <label class="option-card">
+        <input type="checkbox" class="option-checkbox" value="${o.id}">
+        <span class="option-icon">${OPTION_ICONS[o.id] || DEFAULT_ICON}</span>
+        <span class="option-label">${escapeHtml(o.label)}</span>
+        <span class="option-price">${o.price > 0 ? `+${fmtEUR(o.price)}` : 'Sur devis'}</span>
+      </label>`).join('');
+  }
+
+  grid.querySelectorAll('.formula-card').forEach(card => {
+    card.addEventListener('click', () => selectFormula(card.dataset.formula));
+  });
+  optionsGrid?.querySelectorAll('.option-checkbox').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.checked ? selectedOptionIds.add(cb.value) : selectedOptionIds.delete(cb.value);
+      cb.closest('.option-card').classList.toggle('selected', cb.checked);
+      updateConfigSummary();
+    });
+  });
 }
+
+function selectFormula(id) {
+  selectedFormulaId = id;
+  document.querySelectorAll('.formula-card').forEach(card => {
+    const active = card.dataset.formula === id;
+    card.classList.toggle('selected', active);
+    card.setAttribute('aria-pressed', String(active));
+  });
+  document.getElementById('config-options-step').hidden = false;
+  updateConfigSummary();
+}
+
+function updateConfigSummary() {
+  const summary = document.getElementById('config-summary');
+  const totalEl = document.getElementById('config-total');
+  if (!summary || !selectedFormulaId) return;
+  summary.hidden = false;
+
+  const formula = configFormulas.find(f => f.id === selectedFormulaId);
+  const chosenOptions = configOptions.filter(o => selectedOptionIds.has(o.id));
+  const pricedTotal = (formula?.basePrice > 0 ? formula.basePrice : 0)
+    + chosenOptions.reduce((sum, o) => sum + (o.price > 0 ? o.price : 0), 0);
+  const hasUnpriced = !(formula?.basePrice > 0) || chosenOptions.some(o => !(o.price > 0));
+
+  if (pricedTotal === 0) {
+    totalEl.textContent = 'Sur devis';
+  } else {
+    totalEl.textContent = hasUnpriced ? `À partir de ${fmtEUR(pricedTotal)}` : fmtEUR(pricedTotal);
+  }
+
+  summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ── Pré-remplissage de la demande de devis avec la configuration choisie ── */
+(function initConfigCta() {
+  const ctaBtn = document.getElementById('config-cta-btn');
+  if (!ctaBtn) return;
+  const MARKER_START = '— Configuration choisie sur le site —';
+  const MARKER_END   = '— fin de la configuration —';
+
+  ctaBtn.addEventListener('click', () => {
+    if (!selectedFormulaId) return;
+    const formula = configFormulas.find(f => f.id === selectedFormulaId);
+    const select  = document.getElementById('event_type');
+    const textarea = document.getElementById('message');
+    if (!formula) return;
+
+    if (select) {
+      select.value = formula.id;
+      select.dispatchEvent(new Event('change'));
+    }
+
+    if (textarea) {
+      const chosenOptions = configOptions.filter(o => selectedOptionIds.has(o.id));
+      const lines = [`Formule : ${formula.name}`];
+      if (chosenOptions.length) lines.push(`Options : ${chosenOptions.map(o => o.label).join(', ')}`);
+      const block = `${MARKER_START}\n${lines.join('\n')}\n${MARKER_END}`;
+
+      const value   = textarea.value;
+      const startIdx = value.indexOf(MARKER_START);
+      const endIdx   = value.indexOf(MARKER_END);
+      if (startIdx !== -1 && endIdx !== -1) {
+        textarea.value = value.slice(0, startIdx) + block + value.slice(endIdx + MARKER_END.length);
+      } else {
+        textarea.value = block + (value.trim()
+          ? '\n\n' + value
+          : "\n\nDécris ici ton événement : lieu, nombre de personnes, horaires souhaités…");
+      }
+    }
+  });
+})();
 
 /* ── Événements (rendu + filtre) ── */
 let allEvents     = [];
@@ -365,7 +491,7 @@ function escapeHtml(str) {
       renderMixes(data.mixes || []);
       staticEvents = data.events || [];
       mergeAndRenderEvents();
-      renderPricing(data.pricing || []);
+      renderPricingConfigurator(data.pricing || [], data.pricingOptions || []);
       initReveal();
     })
     .catch(err => console.error('Erreur de chargement des données :', err));

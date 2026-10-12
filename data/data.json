@@ -81,28 +81,40 @@
   ],
   "pricing": [
     {
+      "id": "birthday",
       "name": "Anniversaire",
-      "icon": "🎂",
       "description": "Animation sur-mesure pour souffler vos bougies en musique, playlist adaptée à tous les âges.",
-      "features": ["Mix all styles", "Micro & annonces", "Sono adaptée à la salle"]
+      "features": ["Mix all styles", "Micro & annonces", "Sono adaptée à la salle"],
+      "basePrice": 0
     },
     {
+      "id": "wedding",
       "name": "Mariage",
-      "icon": "💍",
       "description": "De la cérémonie à la dernière danse : ambiance chic, playlist personnalisée avec les mariés.",
-      "features": ["Rendez-vous de préparation", "Mix vin d'honneur → soirée", "Éclairage d'ambiance"]
+      "features": ["Rendez-vous de préparation", "Mix vin d'honneur → soirée", "Éclairage d'ambiance"],
+      "basePrice": 0
     },
     {
+      "id": "corporate",
       "name": "Entreprise / Séminaire",
-      "icon": "🏢",
       "description": "Soirées corporate, lancements, team building : une prestation professionnelle et discrète ou festive selon vos besoins.",
-      "features": ["Matériel son & lumière", "Habillage sonore d'événement", "Discrétion & ponctualité"]
+      "features": ["Matériel son & lumière", "Habillage sonore d'événement", "Discrétion & ponctualité"],
+      "basePrice": 0
     },
     {
+      "id": "bar",
       "name": "Bars & Guinguettes",
-      "icon": "🍻",
       "description": "Soirées régulières dans les bars et guinguettes du secteur — ambiance festive garantie pour tous les publics.",
-      "features": ["Sets généralistes", "Interaction avec le public", "Matériel fourni"]
+      "features": ["Sets généralistes", "Interaction avec le public", "Matériel fourni"],
+      "basePrice": 0
     }
+  ],
+  "pricingOptions": [
+    { "id": "lighting",    "label": "Éclairage additionnel (jeux de lumière)", "price": 0 },
+    { "id": "fog",         "label": "Machine à fumée / brouillard",           "price": 0 },
+    { "id": "photobooth",  "label": "Photobooth / borne selfie",              "price": 0 },
+    { "id": "sound",       "label": "Sonorisation renforcée (grande salle)",  "price": 0 },
+    { "id": "hour",        "label": "Heure supplémentaire",                  "price": 0 },
+    { "id": "mc",          "label": "Animation micro & jeux",                "price": 0 }
   ]
 }
