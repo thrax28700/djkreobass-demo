@@ -1,67 +1,6 @@
 /* DJ KREOBASS - Portfolio JavaScript */
 'use strict';
 
-/* ── Particles (étincelles dorées flottantes) ── */
-(function initParticles() {
-  const canvas = document.getElementById('particles-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  let W, H;
-
-  const COLORS = ['rgba(212,175,55,', 'rgba(244,229,161,', 'rgba(140,106,47,'];
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-
-  function randomParticle() {
-    const c = COLORS[Math.floor(Math.random() * COLORS.length)];
-    return {
-      x:    Math.random() * W,
-      y:    Math.random() * H,
-      r:    Math.random() * 1.8 + 0.3,
-      vx:   (Math.random() - 0.5) * 0.25,
-      vy:   (Math.random() - 0.5) * 0.25,
-      a:    Math.random() * 0.5 + 0.15,
-      da:   (Math.random() - 0.5) * 0.004,
-      color: c,
-    };
-  }
-
-  function init() {
-    resize();
-    const count = Math.min(Math.floor((W * H) / 9000), 120);
-    particles = Array.from({ length: count }, randomParticle);
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    for (const p of particles) {
-      p.x  += p.vx;
-      p.y  += p.vy;
-      p.a  += p.da;
-      if (p.a < 0.05) p.da = Math.abs(p.da);
-      if (p.a > 0.65)  p.da = -Math.abs(p.da);
-      if (p.x < -5) p.x = W + 5;
-      if (p.x > W + 5) p.x = -5;
-      if (p.y < -5) p.y = H + 5;
-      if (p.y > H + 5) p.y = -5;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color + p.a + ')';
-      ctx.fill();
-    }
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', () => { resize(); });
-  init();
-  draw();
-})();
-
 /* ── Navbar scroll ── */
 (function initNavbar() {
   const navbar = document.getElementById('navbar');
@@ -521,7 +460,6 @@ function initReveal() {
     ['.contact-form',     'reveal-right'],
     ['.section-header',   'reveal'],
     ['.era-card',         'reveal'],
-    ['.gallery-item',     'reveal'],
     ['.highlight-card',   'reveal'],
     ['.reviews-widget',   'reveal'],
   ];
