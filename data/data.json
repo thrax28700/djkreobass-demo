@@ -110,11 +110,47 @@
     }
   ],
   "pricingOptions": [
-    { "id": "lighting",    "label": "Éclairage additionnel (jeux de lumière)", "price": 0 },
-    { "id": "fog",         "label": "Machine à fumée / brouillard",           "price": 0 },
-    { "id": "photobooth",  "label": "Photobooth / borne selfie",              "price": 0 },
-    { "id": "sound",       "label": "Sonorisation renforcée (grande salle)",  "price": 0 },
-    { "id": "hour",        "label": "Heure supplémentaire",                  "price": 0 },
-    { "id": "mc",          "label": "Animation micro & jeux",                "price": 0 }
+    {
+      "id": "lighting",
+      "label": "Éclairage additionnel",
+      "description": "Jeux de lumière supplémentaires (lyres, gyrophares, effets colorés) pour sublimer la piste de danse et intensifier l'ambiance.",
+      "price": 0,
+      "photo": ""
+    },
+    {
+      "id": "fog",
+      "label": "Machine à fumée / brouillard",
+      "description": "Effet brouillard ou fumée pour un rendu scénique spectaculaire, idéal pour une première danse ou une entrée remarquée.",
+      "price": 0,
+      "photo": ""
+    },
+    {
+      "id": "photobooth",
+      "label": "Photobooth / borne selfie",
+      "description": "Borne photo avec accessoires : un souvenir amusant à emporter pour chacun de vos invités.",
+      "price": 0,
+      "photo": ""
+    },
+    {
+      "id": "sound",
+      "label": "Sonorisation renforcée",
+      "description": "Système de son additionnel pour les grandes salles ou l'extérieur, afin que la musique porte bien partout.",
+      "price": 0,
+      "photo": ""
+    },
+    {
+      "id": "hour",
+      "label": "Heure supplémentaire",
+      "description": "Une heure de prestation en plus pour prolonger la fête sans regarder l'horloge.",
+      "price": 0,
+      "photo": ""
+    },
+    {
+      "id": "mc",
+      "label": "Animation micro & jeux",
+      "description": "Annonces, jeux et interactions avec le public pour dynamiser la soirée du début à la fin.",
+      "price": 0,
+      "photo": ""
+    }
   ]
 }

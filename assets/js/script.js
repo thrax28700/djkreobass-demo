@@ -237,23 +237,21 @@ function renderPricingConfigurator(formulas, options) {
   const optionsGrid = document.getElementById('pricing-options');
   if (optionsGrid) {
     optionsGrid.innerHTML = configOptions.map(o => `
-      <label class="option-card">
-        <input type="checkbox" class="option-checkbox" value="${o.id}">
-        <span class="option-icon">${OPTION_ICONS[o.id] || DEFAULT_ICON}</span>
+      <button type="button" class="option-card" data-option="${o.id}">
+        <span class="option-thumb">
+          ${o.photo ? `<img src="${escapeHtml(o.photo)}" alt="${escapeHtml(o.label)}" loading="lazy">` : (OPTION_ICONS[o.id] || DEFAULT_ICON)}
+        </span>
         <span class="option-label">${escapeHtml(o.label)}</span>
         <span class="option-price">${o.price > 0 ? `+${fmtEUR(o.price)}` : 'Sur devis'}</span>
-      </label>`).join('');
+        <span class="option-selected-badge" aria-hidden="true">✓</span>
+      </button>`).join('');
+    optionsGrid.querySelectorAll('.option-card').forEach(card => {
+      card.addEventListener('click', () => openOptionModal(card.dataset.option));
+    });
   }
 
   grid.querySelectorAll('.formula-card').forEach(card => {
     card.addEventListener('click', () => selectFormula(card.dataset.formula));
-  });
-  optionsGrid?.querySelectorAll('.option-checkbox').forEach(cb => {
-    cb.addEventListener('change', () => {
-      cb.checked ? selectedOptionIds.add(cb.value) : selectedOptionIds.delete(cb.value);
-      cb.closest('.option-card').classList.toggle('selected', cb.checked);
-      updateConfigSummary();
-    });
   });
 }
 
@@ -288,6 +286,144 @@ function updateConfigSummary() {
 
   summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+
+/* ── Modale de détail d'une option (photo, description, ajout à la sélection) ── */
+function openOptionModal(id) {
+  const option = configOptions.find(o => o.id === id);
+  const modal  = document.getElementById('option-modal');
+  if (!option || !modal) return;
+
+  const photoEl   = document.getElementById('option-modal-photo');
+  const titleEl   = document.getElementById('option-modal-title');
+  const descEl    = document.getElementById('option-modal-desc');
+  const priceEl   = document.getElementById('option-modal-price');
+  const toggleBtn = document.getElementById('option-modal-toggle-btn');
+
+  photoEl.innerHTML = option.photo
+    ? `<img src="${escapeHtml(option.photo)}" alt="${escapeHtml(option.label)}">`
+    : (OPTION_ICONS[option.id] || DEFAULT_ICON);
+  titleEl.textContent = option.label;
+  descEl.textContent  = option.description || '';
+  priceEl.textContent = option.price > 0 ? `+${fmtEUR(option.price)}` : 'Sur devis';
+
+  function syncToggleBtn() {
+    const isSelected = selectedOptionIds.has(id);
+    toggleBtn.textContent = isSelected ? '✓ Ajoutée — retirer de ma sélection' : '+ Ajouter à ma sélection';
+    toggleBtn.classList.toggle('btn-outline', isSelected);
+    toggleBtn.classList.toggle('btn-primary', !isSelected);
+  }
+  syncToggleBtn();
+
+  toggleBtn.onclick = () => {
+    selectedOptionIds.has(id) ? selectedOptionIds.delete(id) : selectedOptionIds.add(id);
+    document.querySelector(`.option-card[data-option="${id}"]`)?.classList.toggle('selected', selectedOptionIds.has(id));
+    syncToggleBtn();
+    updateConfigSummary();
+  };
+
+  modal.hidden = false;
+}
+
+(function initOptionModal() {
+  const modal    = document.getElementById('option-modal');
+  const closeBtn = document.getElementById('option-modal-close');
+  if (!modal) return;
+  const close = () => { modal.hidden = true; };
+  closeBtn?.addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
+})();
+
+/* ── Guide par questions : recommande le type d'événement sans IA réelle ── */
+const QUIZ_QUESTIONS = [
+  {
+    question: "Quelle est l'occasion ?",
+    answers: [
+      { label: 'Un mariage',                                     weights: { wedding: 3 } },
+      { label: 'Un anniversaire',                                weights: { birthday: 3 } },
+      { label: "Une soirée d'entreprise ou un séminaire",         weights: { corporate: 3 } },
+      { label: 'Une soirée festive sans occasion particulière',   weights: { bar: 2, other: 1 } },
+    ],
+  },
+  {
+    question: 'Où se déroule la soirée ?',
+    answers: [
+      { label: 'Salle de réception ou à domicile', weights: { wedding: 1, birthday: 1, other: 1 } },
+      { label: 'Bar, guinguette ou lieu public',   weights: { bar: 2 } },
+      { label: 'Bureaux ou salle de conférence',   weights: { corporate: 2 } },
+    ],
+  },
+  {
+    question: 'Quelle ambiance recherchez-vous ?',
+    answers: [
+      { label: 'Chic et élégante',             weights: { wedding: 2 } },
+      { label: 'Festive et conviviale',        weights: { bar: 1, birthday: 2 } },
+      { label: 'Professionnelle et maîtrisée', weights: { corporate: 2 } },
+    ],
+  },
+];
+
+let quizIndex = 0;
+const quizScores = { wedding: 0, birthday: 0, corporate: 0, bar: 0, other: 0 };
+
+function renderQuizStep() {
+  const card = document.getElementById('quiz-card');
+  if (!card) return;
+  const q = QUIZ_QUESTIONS[quizIndex];
+  card.innerHTML = `
+    <div class="quiz-progress">Question ${quizIndex + 1} / ${QUIZ_QUESTIONS.length}</div>
+    <p class="quiz-question">${escapeHtml(q.question)}</p>
+    <div class="quiz-answers">
+      ${q.answers.map((a, i) => `<button type="button" class="quiz-answer-btn" data-index="${i}">${escapeHtml(a.label)}</button>`).join('')}
+    </div>`;
+  card.querySelectorAll('.quiz-answer-btn').forEach(btn => {
+    btn.addEventListener('click', () => answerQuiz(q.answers[Number(btn.dataset.index)]));
+  });
+}
+
+function answerQuiz(answer) {
+  Object.entries(answer.weights).forEach(([id, w]) => { quizScores[id] = (quizScores[id] || 0) + w; });
+  quizIndex++;
+  quizIndex < QUIZ_QUESTIONS.length ? renderQuizStep() : finishQuiz();
+}
+
+function finishQuiz() {
+  const bestId = Object.entries(quizScores).sort((a, b) => b[1] - a[1])[0][0];
+  revealFormulaStep(bestId);
+}
+
+function revealFormulaStep(recommendedId) {
+  document.getElementById('config-quiz-step').hidden = true;
+  document.getElementById('config-formula-step').hidden = false;
+
+  const resultEl = document.getElementById('quiz-result');
+  if (recommendedId && resultEl) {
+    const formula = configFormulas.find(f => f.id === recommendedId);
+    if (formula) {
+      resultEl.hidden = false;
+      resultEl.innerHTML = `D'après vos réponses, on vous recommande la formule <strong>${escapeHtml(formula.name)}</strong> — vous pouvez bien sûr en choisir une autre ci-dessous. <button type="button" class="quiz-redo-btn" id="quiz-redo-btn">Refaire le questionnaire</button>`;
+      document.getElementById('quiz-redo-btn')?.addEventListener('click', restartQuiz);
+      selectFormula(recommendedId);
+    }
+  }
+  document.getElementById('config-formula-step').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restartQuiz() {
+  quizIndex = 0;
+  Object.keys(quizScores).forEach(k => { quizScores[k] = 0; });
+  const resultEl = document.getElementById('quiz-result');
+  if (resultEl) { resultEl.hidden = true; resultEl.innerHTML = ''; }
+  document.getElementById('config-formula-step').hidden = true;
+  document.getElementById('config-quiz-step').hidden = false;
+  renderQuizStep();
+}
+
+(function initQuiz() {
+  if (!document.getElementById('quiz-card')) return;
+  renderQuizStep();
+  document.getElementById('quiz-skip-btn')?.addEventListener('click', () => revealFormulaStep(null));
+})();
 
 /* ── Pré-remplissage de la demande de devis avec la configuration choisie ── */
 (function initConfigCta() {

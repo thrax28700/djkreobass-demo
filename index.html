@@ -241,13 +241,20 @@
         <h2 class="section-title" id="pricing-title">Composez Votre Soirée</h2>
       </div>
 
-      <div class="config-step">
-        <span class="config-step-label"><span class="config-step-num">1</span> Choisissez votre type d'événement</span>
+      <div class="config-step" id="config-quiz-step">
+        <span class="config-step-label"><span class="config-step-num">1</span> Laissez-vous guider</span>
+        <div class="quiz-card" id="quiz-card"></div>
+        <button type="button" class="quiz-skip-link" id="quiz-skip-btn">Je sais déjà ce que je veux, choisir directement →</button>
+      </div>
+
+      <div class="config-step" id="config-formula-step" hidden>
+        <span class="config-step-label"><span class="config-step-num">2</span> Votre type d'événement</span>
+        <div class="quiz-result" id="quiz-result" hidden></div>
         <div class="pricing-grid" id="pricing-grid"></div>
       </div>
 
       <div class="config-step" id="config-options-step" hidden>
-        <span class="config-step-label"><span class="config-step-num">2</span> Ajoutez des options (facultatif)</span>
+        <span class="config-step-label"><span class="config-step-num">3</span> Ajoutez des options (facultatif)</span>
         <div class="config-options-grid" id="pricing-options"></div>
       </div>
 
@@ -557,6 +564,20 @@
     </svg>
     <span class="whatsapp-float-tooltip">Un devis en 2 minutes sur WhatsApp</span>
   </a>
+
+  <!-- ═══════ MODALE : détail d'une option ═══════ -->
+  <div class="option-modal" id="option-modal" hidden>
+    <div class="option-modal-card">
+      <button type="button" class="option-modal-close" id="option-modal-close" aria-label="Fermer">✕</button>
+      <div class="option-modal-photo" id="option-modal-photo"></div>
+      <div class="option-modal-body">
+        <h3 class="option-modal-title" id="option-modal-title"></h3>
+        <p class="option-modal-desc" id="option-modal-desc"></p>
+        <div class="option-modal-price" id="option-modal-price"></div>
+        <button type="button" class="btn btn-primary btn-full" id="option-modal-toggle-btn"></button>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/js/firebase-config.js"></script>
   <script type="module" src="assets/js/booking.js"></script>

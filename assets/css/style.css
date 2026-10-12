@@ -846,6 +846,86 @@ nav, section, footer { position: relative; z-index: 2; }
   flex-shrink: 0;
 }
 
+/* ── Guide par questions (recommande le type d'événement) ── */
+.quiz-card {
+  background: var(--grad-card);
+  border: 1px solid var(--border-or);
+  border-radius: var(--r);
+  padding: 40px;
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.quiz-progress {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+.quiz-question {
+  font-family: var(--f-display);
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+.quiz-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.quiz-answer-btn {
+  font: inherit;
+  width: 100%;
+  background: rgba(212,175,55,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  color: var(--text2);
+  font-size: 0.95rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--t);
+}
+.quiz-answer-btn:hover { border-color: var(--or); color: var(--or); background: rgba(212,175,55,0.08); }
+.quiz-skip-link {
+  display: block;
+  margin: 18px auto 0;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--text3);
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: center;
+}
+.quiz-skip-link:hover { color: var(--or); }
+.quiz-result {
+  background: var(--grad-card);
+  border: 1px dashed var(--border-or);
+  border-radius: var(--r);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  text-align: center;
+  color: var(--text2);
+  font-size: 0.95rem;
+}
+.quiz-result strong { color: var(--or); }
+.quiz-redo-btn {
+  display: inline;
+  background: none;
+  border: none;
+  font: inherit;
+  color: var(--or2);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+}
+
 /* ── Cartes-formules cliquables ── */
 .formula-card {
   font: inherit;
@@ -878,45 +958,65 @@ nav, section, footer { position: relative; z-index: 2; }
 }
 .formula-card.selected .formula-check { opacity: 1; transform: scale(1); }
 
-/* ── Options (extras : éclairage, machine à fumée...) ── */
+/* ── Options illustrées (ouvrent une modale au clic) ── */
 .config-options-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
 }
 .option-card {
   position: relative;
+  font: inherit;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   background: var(--grad-card);
   border: 1px solid var(--border);
   border-radius: var(--r);
-  padding: 16px 18px;
+  padding: 18px 16px 20px;
   cursor: pointer;
-  transition: border-color var(--t), box-shadow var(--t);
+  text-align: center;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: transform var(--t), border-color var(--t), box-shadow var(--t);
 }
-.option-card:hover { border-color: rgba(212,175,55,0.35); }
+.option-card:hover { transform: translateY(-4px); border-color: rgba(212,175,55,0.35); }
 .option-card.selected { border-color: var(--or); box-shadow: 0 0 0 2px rgba(212,175,55,0.22); }
-.option-checkbox {
-  position: absolute;
-  opacity: 0;
-  width: 1px; height: 1px;
-}
-.option-icon {
-  width: 38px; height: 38px;
-  flex-shrink: 0;
+.option-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(212,175,55,0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(212,175,55,0.1);
-  border-radius: 50%;
   color: var(--or);
 }
-.option-icon svg { width: 18px; height: 18px; }
-.option-label { flex-grow: 1; font-size: 0.88rem; color: var(--text2); }
+.option-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.option-thumb svg { width: 32px; height: 32px; }
+.option-label { font-size: 0.88rem; color: var(--text2); }
 .option-card.selected .option-label { color: var(--text); }
-.option-price { font-size: 0.78rem; color: var(--text3); white-space: nowrap; }
+.option-price { font-size: 0.76rem; color: var(--text3); white-space: nowrap; }
+.option-selected-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--grad-or);
+  color: #100C00;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: var(--t);
+}
+.option-card.selected .option-selected-badge { opacity: 1; transform: scale(1); }
 
 /* ── Résumé / CTA ── */
 .config-summary {
@@ -934,6 +1034,72 @@ nav, section, footer { position: relative; z-index: 2; }
 .config-summary-text { display: flex; flex-direction: column; gap: 4px; }
 .config-summary-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); }
 .config-summary-total { font-family: var(--f-display); font-size: 1.8rem; letter-spacing: 1px; color: var(--or); }
+
+/* ── Modale de détail d'une option ── */
+.option-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(5,5,4,0.8);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.option-modal-card {
+  position: relative;
+  background: var(--grad-card);
+  border: 1px solid var(--border-or);
+  border-radius: var(--r);
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.option-modal-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 1;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(5,5,4,0.6);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--t);
+}
+.option-modal-close:hover { border-color: var(--or); color: var(--or); }
+.option-modal-photo {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: rgba(212,175,55,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--or);
+  border-radius: var(--r) var(--r) 0 0;
+  overflow: hidden;
+}
+.option-modal-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.option-modal-photo svg { width: 48px; height: 48px; }
+.option-modal-body { padding: 28px 28px 32px; }
+.option-modal-title {
+  font-family: var(--f-display);
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: var(--or);
+  margin-bottom: 12px;
+}
+.option-modal-desc { color: var(--text2); font-size: 0.92rem; margin-bottom: 16px; }
+.option-modal-price {
+  font-family: var(--f-display);
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-bottom: 20px;
+}
 
 /* ══════════════════════════
    AVIS / REVIEWS
@@ -1507,4 +1673,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(
   .about-stats { gap:16px; }
   .section-header { margin-bottom:40px; }
   .hero-eras { gap:6px; }
+  .quiz-card { padding: 28px 20px; }
+  .quiz-question { font-size: 1.3rem; }
+  .config-summary { padding: 20px; }
 }

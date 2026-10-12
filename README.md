@@ -27,25 +27,35 @@ Site vitrine statique pour DJ KREOBASS, animateur & platiniste professionnel en 
 
 ## Configurateur de tarifs ("Composez votre soirée")
 
-La section Tarifs n'affiche plus de simples fiches statiques : le visiteur choisit d'abord son type
-d'événement (mariage, anniversaire, séminaire, bar/guinguette), puis coche des options (éclairage
-additionnel, machine à fumée, photobooth, sonorisation renforcée, heure supplémentaire, animation
-micro). Un total indicatif s'affiche en direct, et le bouton final pré-remplit automatiquement le
-formulaire de contact (type d'événement + récapitulatif de la configuration dans le message) avant
-de l'envoyer vers la demande de devis.
+La section Tarifs est un parcours en 3 étapes, sans IA réelle (donc gratuit et sans compte à créer) :
+
+1. **Guide par questions** : 3 questions simples (occasion, lieu, ambiance recherchée) ; chaque réponse
+   pondère un score par type d'événement, et le site recommande automatiquement la formule la plus
+   probable ("D'après vos réponses, on vous recommande..."), tout en laissant le visiteur en choisir
+   une autre. Un lien "Je sais déjà ce que je veux" permet de sauter directement à l'étape suivante.
+2. **Options illustrées** : chaque option (éclairage, machine à fumée, photobooth...) est une carte
+   avec photo ; cliquer dessus ouvre une **modale** avec une photo plus grande, une description et un
+   bouton "Ajouter à ma sélection" / "Retirer".
+3. **Résumé & devis** : total indicatif en direct, puis le bouton final pré-remplit automatiquement le
+   formulaire de contact (type d'événement + récapitulatif de la configuration dans le message) avant
+   de l'envoyer vers la demande de devis.
 
 Tout est piloté par `data/data.json` :
 
 - `pricing[].basePrice` et `pricingOptions[].price` sont à **0 par défaut** → le configurateur
   affiche alors "Sur devis" au lieu d'un montant. Renseigne un prix indicatif (en euros, nombre, sans
   symbole) dès que vous avez des tarifs de base à communiquer, et le total se calcule automatiquement.
-- Pour ajouter/retirer une option, modifie le tableau `pricingOptions` (`id`, `label`, `price`). L'
-  icône affichée dépend de l'`id` (`lighting`, `fog`, `photobooth`, `sound`, `hour`, `mc` sont déjà
-  prévus dans `assets/js/script.js` → `OPTION_ICONS` ; pour un nouvel `id`, ajoute son icône SVG dans
-  ce même objet, sinon une icône générique s'affiche).
+- `pricingOptions[].photo` est à **vide par défaut** → la carte et la modale affichent une icône à la
+  place. Pour ajouter une vraie photo, dépose le fichier dans `assets/images/options/` (dossier à
+  créer) et renseigne son chemin, ex. `"photo": "assets/images/options/eclairage.jpg"`.
+- `pricingOptions[].description` est le texte affiché dans la modale — à adapter librement.
+- Pour ajouter/retirer une option, modifie le tableau `pricingOptions` (`id`, `label`, `description`,
+  `price`, `photo`). L'icône de secours dépend de l'`id` (`lighting`, `fog`, `photobooth`, `sound`,
+  `hour`, `mc` sont déjà prévus dans `assets/js/script.js` → `OPTION_ICONS` ; pour un nouvel `id`,
+  ajoute son icône SVG dans ce même objet, sinon une icône générique s'affiche).
 - Les 4 formules (`pricing[]`) gardent leur `id` aligné sur les types d'événement du site
   (`wedding`, `birthday`, `corporate`, `bar`) pour que la sélection remplisse correctement le
-  formulaire de contact.
+  formulaire de contact, et sur les poids du questionnaire (`QUIZ_QUESTIONS` dans `script.js`).
 
 ## Calendrier de réservation partagé (Firebase)
 
