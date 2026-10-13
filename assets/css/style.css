@@ -991,12 +991,26 @@ nav, section, footer { position: relative; z-index: 2; }
   overflow: hidden;
   background: rgba(212,175,55,0.08);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   color: var(--or);
 }
 .option-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .option-thumb svg { width: 32px; height: 32px; }
+.option-thumb-empty {
+  border: 2px dashed rgba(212,175,55,0.3);
+  background: rgba(212,175,55,0.03);
+  color: var(--text3);
+}
+.option-thumb-hint {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
 .option-label { font-size: 0.88rem; color: var(--text2); }
 .option-card.selected .option-label { color: var(--text); }
 .option-price { font-size: 0.76rem; color: var(--text3); white-space: nowrap; }
@@ -1077,14 +1091,22 @@ nav, section, footer { position: relative; z-index: 2; }
   aspect-ratio: 16 / 10;
   background: rgba(212,175,55,0.08);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   color: var(--or);
   border-radius: var(--r) var(--r) 0 0;
   overflow: hidden;
 }
 .option-modal-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .option-modal-photo svg { width: 48px; height: 48px; }
+.option-modal-photo-empty {
+  border-bottom: 2px dashed rgba(212,175,55,0.3);
+  background: rgba(212,175,55,0.03);
+  color: var(--text3);
+}
+.option-modal-photo-empty .option-thumb-hint { font-size: 0.72rem; }
 .option-modal-body { padding: 28px 28px 32px; }
 .option-modal-title {
   font-family: var(--f-display);
