@@ -42,7 +42,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     const target = document.querySelector(a.getAttribute('href'));
     if (!target) return;
     e.preventDefault();
-    const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 70;
+    const navH = document.getElementById('navbar')?.offsetHeight || 70;
     window.scrollTo({ top: target.offsetTop - navH + 1, behavior: 'smooth' });
   });
 });
@@ -72,6 +72,30 @@ function renderTicker() {
       <span class="ticker-sep"></span>
       ${g}
     </span>`).join('');
+  animateTicker(track);
+}
+
+/* Défilement piloté en JS (requestAnimationFrame) plutôt que par animation CSS pure :
+   plus fiable sur mobile (certains navigateurs/modes économie d'énergie mettent en
+   pause les animations CSS "infinite" sans prévenir). Respecte prefers-reduced-motion. */
+function animateTicker(track) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const SPEED = 40; // pixels par seconde
+  let x = 0;
+  let last = null;
+
+  function step(ts) {
+    if (last !== null) {
+      const dt = Math.min((ts - last) / 1000, 0.25); // ignore les gros sauts (onglet en pause)
+      x += SPEED * dt;
+      const half = track.scrollWidth / 2;
+      if (half > 0 && x >= half) x -= half;
+      track.style.transform = `translateX(${-x}px)`;
+    }
+    last = ts;
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 
 /* ── Genre color helper ── */
