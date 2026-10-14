@@ -118,17 +118,24 @@ function soundcloudEmbedSrc(url) {
   return `https://w.soundcloud.com/player/?${params.toString()}`;
 }
 
-/* ── Table de mixage : deux platines indépendantes (API SoundCloud Widget)
-   + un crossfader qui contrôle réellement le volume de chacune. ── */
+/* ── Table de mixage : deux platines indépendantes, chacune lisant soit un
+   morceau SoundCloud (API Widget) soit un fichier audio hébergé directement
+   (assets/audio/...) via un <audio> natif. Les deux platines sont totalement
+   indépendantes et peuvent jouer en même temps (true dual playback) ; le
+   crossfader règle le vrai volume de chacune. ── */
 let djTracks = [];
 const deckState = {
-  a: { widget: null, ready: false, playing: false, trackIndex: -1,
-       iframeId: 'deck-a-iframe', playBtnId: 'deck-a-play', trackLabelId: 'deck-a-track',
-       deckElId: 'deck-a', meterId: 'meter-a' },
-  b: { widget: null, ready: false, playing: false, trackIndex: -1,
-       iframeId: 'deck-b-iframe', playBtnId: 'deck-b-play', trackLabelId: 'deck-b-track',
-       deckElId: 'deck-b', meterId: 'meter-b' },
+  a: { kind: null, widget: null, ready: false, playing: false, trackIndex: -1,
+       iframeId: 'deck-a-iframe', audioId: 'deck-a-audio', playBtnId: 'deck-a-play',
+       trackLabelId: 'deck-a-track', deckElId: 'deck-a', meterId: 'meter-a' },
+  b: { kind: null, widget: null, ready: false, playing: false, trackIndex: -1,
+       iframeId: 'deck-b-iframe', audioId: 'deck-b-audio', playBtnId: 'deck-b-play',
+       trackLabelId: 'deck-b-track', deckElId: 'deck-b', meterId: 'meter-b' },
 };
+
+function isPlayableTrack(mix) {
+  return isPlayableSoundcloud(mix?.soundcloud_url) || (typeof mix?.audio_url === 'string' && mix.audio_url.length > 0);
+}
 
 function renderDjConsole(mixes) {
   djTracks = mixes || [];
@@ -136,7 +143,7 @@ function renderDjConsole(mixes) {
   if (!list) return;
 
   list.innerHTML = djTracks.map((mix, i) => {
-    const playable = isPlayableSoundcloud(mix.soundcloud_url);
+    const playable = isPlayableTrack(mix);
     return `
     <div class="dj-playlist-row ${playable ? '' : 'disabled'}" data-index="${i}">
       <div class="dj-track-info">
@@ -157,17 +164,38 @@ function renderDjConsole(mixes) {
   document.getElementById('deck-a-play')?.addEventListener('click', () => toggleDeck('a'));
   document.getElementById('deck-b-play')?.addEventListener('click', () => toggleDeck('b'));
   document.getElementById('dj-crossfader')?.addEventListener('input', updateCrossfaderVolumes);
+  initDeckAudioElement('a');
+  initDeckAudioElement('b');
 
-  /* Charge d'office les 2 premiers titres lisibles sur A et B, sans lancer la lecture. */
-  const playable = djTracks.map((m, i) => i).filter(i => isPlayableSoundcloud(djTracks[i].soundcloud_url));
+  /* Charge d'office les 2 premiers titres lisibles sur A et B, sans lancer la lecture.
+     Chaque platine est indépendante : appuyer sur lecture sur A ET sur B fait jouer
+     les deux morceaux en même temps, à mixer avec le crossfader. */
+  const playable = djTracks.map((m, i) => i).filter(i => isPlayableTrack(djTracks[i]));
   if (playable[0] !== undefined) loadDeck('a', playable[0], false);
   if (playable[1] !== undefined) loadDeck('b', playable[1], false);
+}
+
+/* Branche les événements du lecteur <audio> natif une seule fois par platine
+   (réutilisé à chaque changement de morceau local, pas recréé). */
+function initDeckAudioElement(deck) {
+  const state = deckState[deck];
+  const audio = document.getElementById(state.audioId);
+  if (!audio) return;
+  audio.addEventListener('play',  () => { if (state.kind === 'local') setDeckPlaying(deck, true); });
+  audio.addEventListener('pause', () => { if (state.kind === 'local') setDeckPlaying(deck, false); });
+  audio.addEventListener('ended', () => { if (state.kind === 'local') setDeckPlaying(deck, false); });
+  audio.addEventListener('canplay', () => {
+    if (state.kind !== 'local') return;
+    const btn = document.getElementById(state.playBtnId);
+    if (btn) btn.disabled = false;
+    audio.volume = getDeckVolume(deck) / 100;
+  });
 }
 
 function loadDeck(deck, index, autoplay = true) {
   const mix   = djTracks[index];
   const state = deckState[deck];
-  if (!mix || !state || !isPlayableSoundcloud(mix.soundcloud_url)) return;
+  if (!mix || !state || !isPlayableTrack(mix)) return;
 
   state.trackIndex = index;
   const trackLabel = document.getElementById(state.trackLabelId);
@@ -176,9 +204,28 @@ function loadDeck(deck, index, autoplay = true) {
     btn.classList.toggle('loaded', Number(btn.dataset.index) === index);
   });
 
-  const url     = soundcloudEmbedSrc(mix.soundcloud_url);
+  const isLocal = !isPlayableSoundcloud(mix.soundcloud_url) && !!mix.audio_url;
+  const audio   = document.getElementById(state.audioId);
   const iframe  = document.getElementById(state.iframeId);
 
+  if (isLocal) {
+    /* Bascule vers un fichier local : on coupe le lecteur SoundCloud de cette
+       platine s'il tournait, pour ne pas entendre les deux superposés dessus. */
+    if (state.kind === 'sc' && state.widget && state.ready) state.widget.pause();
+    state.kind = 'local';
+    const btn = document.getElementById(state.playBtnId);
+    if (btn) btn.disabled = true;
+    audio.src = mix.audio_url;
+    audio.load();
+    if (autoplay) audio.play().catch(() => {});
+    return;
+  }
+
+  /* Piste SoundCloud : on coupe le lecteur local de cette platine s'il tournait. */
+  if (state.kind === 'local') audio.pause();
+  state.kind = 'sc';
+
+  const url = soundcloudEmbedSrc(mix.soundcloud_url);
   const bindWidgetEvents = () => {
     if (!window.SC) return;
     state.widget = SC.Widget(iframe);
@@ -195,7 +242,10 @@ function loadDeck(deck, index, autoplay = true) {
   };
 
   if (state.widget && state.ready) {
-    state.widget.load(url, { callback: () => { if (autoplay) state.widget.play(); } });
+    /* widget.load() attend l'URL brute de la piste SoundCloud (son "permalink"),
+       pas l'URL d'intégration du lecteur (soundcloudEmbedSrc) — sinon le
+       changement de morceau échoue silencieusement une fois le lecteur déjà actif. */
+    state.widget.load(mix.soundcloud_url, { callback: () => { if (autoplay) state.widget.play(); } });
   } else {
     iframe.src = url;
     iframe.addEventListener('load', bindWidgetEvents, { once: true });
@@ -204,6 +254,12 @@ function loadDeck(deck, index, autoplay = true) {
 
 function toggleDeck(deck) {
   const state = deckState[deck];
+  if (state.kind === 'local') {
+    const audio = document.getElementById(state.audioId);
+    if (!audio?.src) return;
+    audio.paused ? audio.play().catch(() => {}) : audio.pause();
+    return;
+  }
   if (!state.widget || !state.ready) return;
   state.playing ? state.widget.pause() : state.widget.play();
 }
@@ -229,7 +285,13 @@ function getDeckVolume(deck) {
 function updateCrossfaderVolumes() {
   ['a', 'b'].forEach(deck => {
     const state = deckState[deck];
-    if (state.widget && state.ready) state.widget.setVolume(getDeckVolume(deck));
+    const vol = getDeckVolume(deck);
+    if (state.kind === 'local') {
+      const audio = document.getElementById(state.audioId);
+      if (audio) audio.volume = vol / 100;
+    } else if (state.widget && state.ready) {
+      state.widget.setVolume(vol);
+    }
   });
 }
 

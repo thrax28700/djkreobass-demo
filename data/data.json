@@ -27,6 +27,34 @@
       "genre": "",
       "year": "",
       "soundcloud_url": "https://soundcloud.com/deejaykreobass/jermaine-dupri-feat-pdiddy-welcome-to-new-york-mashup-kreo"
+    },
+    {
+      "title": "Années 80-90",
+      "duration": "",
+      "genre": "",
+      "year": "",
+      "audio_url": "assets/audio/annees-80-90.mp3"
+    },
+    {
+      "title": "Latino",
+      "duration": "",
+      "genre": "",
+      "year": "",
+      "audio_url": "assets/audio/latino.mp3"
+    },
+    {
+      "title": "Old School Rap R&B",
+      "duration": "",
+      "genre": "",
+      "year": "",
+      "audio_url": "assets/audio/old-school-rap-rnb.mp3"
+    },
+    {
+      "title": "Urban Club",
+      "duration": "",
+      "genre": "",
+      "year": "",
+      "audio_url": "assets/audio/urban-club.mp3"
     }
   ],
   "events": [
