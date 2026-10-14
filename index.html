@@ -24,6 +24,27 @@
 <body>
 
   <audio id="intro-drop" src="assets/audio/intro-drop.mp3" preload="auto"></audio>
+  <script>
+    /* Déclenché ici, au tout début du body, pour partir le plus vite possible —
+       plutôt que dans script.js, chargé en bas de page après les grosses images
+       et vidéos. Les navigateurs bloquant le son sans interaction préalable, on
+       tente la lecture immédiate puis on se rattrape au premier clic/toucher. */
+    (function () {
+      var drop = document.getElementById('intro-drop');
+      if (!drop) return;
+      var attempt = drop.play();
+      if (attempt && typeof attempt.catch === 'function') {
+        attempt.catch(function () {
+          var events = ['pointerdown', 'keydown', 'touchstart'];
+          var trigger = function () {
+            drop.play().catch(function () {});
+            events.forEach(function (ev) { document.removeEventListener(ev, trigger); });
+          };
+          events.forEach(function (ev) { document.addEventListener(ev, trigger, { once: true }); });
+        });
+      }
+    })();
+  </script>
 
   <div class="flag-background" aria-hidden="true"></div>
 

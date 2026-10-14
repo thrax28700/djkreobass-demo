@@ -1,30 +1,9 @@
 /* DJ KREOBASS - Portfolio JavaScript */
 'use strict';
-
-/* ── Drop sonore à l'ouverture du site ──
-   Les navigateurs bloquent la lecture automatique de son tant que le visiteur
-   n'a pas interagi avec la page : on tente de le jouer tout de suite, et si
-   c'est refusé, on le joue au tout premier clic/toucher/touche pressée. */
-(function initIntroDrop() {
-  const drop = document.getElementById('intro-drop');
-  if (!drop) return;
-
-  const playOnce = () => {
-    drop.play().catch(() => {});
-  };
-
-  const playAttempt = drop.play();
-  if (playAttempt && typeof playAttempt.catch === 'function') {
-    playAttempt.catch(() => {
-      const events = ['pointerdown', 'keydown', 'touchstart'];
-      const trigger = () => {
-        playOnce();
-        events.forEach(ev => document.removeEventListener(ev, trigger));
-      };
-      events.forEach(ev => document.addEventListener(ev, trigger, { once: true }));
-    });
-  }
-})();
+/* Le drop sonore d'ouverture est géré par un petit script inline juste après
+   la balise <audio id="intro-drop"> dans index.html (pas ici), pour qu'il se
+   déclenche dès que possible — sans attendre que ce fichier, chargé en bas de
+   page après toutes les images/vidéos, soit téléchargé et exécuté. */
 
 /* ── Navbar scroll ── */
 (function initNavbar() {
