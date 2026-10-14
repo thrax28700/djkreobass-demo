@@ -118,144 +118,156 @@ function soundcloudEmbedSrc(url) {
   return `https://w.soundcloud.com/player/?${params.toString()}`;
 }
 
-/* ── Jukebox (un seul lecteur piloté via l'API SoundCloud Widget + liste de titres) ── */
-let jukeboxTracks  = [];
-let jukeboxIndex   = -1;
-let jukeboxWidget  = null;
-let jukeboxPlaying = false;
-let jukeboxWidgetReady = false;
+/* ── Table de mixage : deux platines indépendantes (API SoundCloud Widget)
+   + un crossfader qui contrôle réellement le volume de chacune. ── */
+let djTracks = [];
+const deckState = {
+  a: { widget: null, ready: false, playing: false, trackIndex: -1,
+       iframeId: 'deck-a-iframe', playBtnId: 'deck-a-play', trackLabelId: 'deck-a-track',
+       deckElId: 'deck-a', meterId: 'meter-a' },
+  b: { widget: null, ready: false, playing: false, trackIndex: -1,
+       iframeId: 'deck-b-iframe', playBtnId: 'deck-b-play', trackLabelId: 'deck-b-track',
+       deckElId: 'deck-b', meterId: 'meter-b' },
+};
 
-function renderJukebox(mixes) {
-  jukeboxTracks = mixes || [];
-  const list    = document.getElementById('jukebox-tracklist');
-  const iframe  = document.getElementById('jukebox-iframe');
-  const nowPlayingEl = document.getElementById('jukebox-now-playing');
-  if (!list || !iframe) return;
+function renderDjConsole(mixes) {
+  djTracks = mixes || [];
+  const list = document.getElementById('dj-playlist-list');
+  if (!list) return;
 
-  list.innerHTML = jukeboxTracks.map((mix, i) => {
+  list.innerHTML = djTracks.map((mix, i) => {
     const playable = isPlayableSoundcloud(mix.soundcloud_url);
     return `
-    <button type="button" class="jukebox-track ${playable ? '' : 'jukebox-track-disabled'}" data-index="${i}" ${playable ? '' : 'disabled'}>
-      <span class="jukebox-track-num">${String(i + 1).padStart(2, '0')}</span>
-      <span class="jukebox-track-info">
-        <span class="jukebox-track-title">${escapeHtml(mix.title)}</span>
-        ${mix.genre ? `<span class="jukebox-track-genre">${escapeHtml(mix.genre)}</span>` : ''}
-      </span>
-      <span class="jukebox-track-play" aria-hidden="true">
-        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-      </span>
-    </button>`;
+    <div class="dj-playlist-row ${playable ? '' : 'disabled'}" data-index="${i}">
+      <div class="dj-track-info">
+        <span class="dj-track-title">${escapeHtml(mix.title)}</span>
+        ${mix.genre ? `<span class="dj-track-genre">${escapeHtml(mix.genre)}</span>` : ''}
+      </div>
+      ${playable ? `
+      <button type="button" class="dj-load-btn" data-deck="a" data-index="${i}">→ A</button>
+      <button type="button" class="dj-load-btn" data-deck="b" data-index="${i}">→ B</button>
+      ` : '<span class="dj-track-genre">Bientôt dispo</span>'}
+    </div>`;
   }).join('');
 
-  list.querySelectorAll('.jukebox-track:not([disabled])').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const i = Number(btn.dataset.index);
-      i === jukeboxIndex ? toggleJukeboxPlayback() : loadJukeboxTrack(i, true);
-    });
+  list.querySelectorAll('.dj-load-btn').forEach(btn => {
+    btn.addEventListener('click', () => loadDeck(btn.dataset.deck, Number(btn.dataset.index)));
   });
 
-  const firstPlayable = jukeboxTracks.findIndex(m => isPlayableSoundcloud(m.soundcloud_url));
-  if (firstPlayable === -1) {
-    if (nowPlayingEl) nowPlayingEl.textContent = 'Mixes à venir';
-    return;
-  }
+  document.getElementById('deck-a-play')?.addEventListener('click', () => toggleDeck('a'));
+  document.getElementById('deck-b-play')?.addEventListener('click', () => toggleDeck('b'));
+  document.getElementById('dj-crossfader')?.addEventListener('input', updateCrossfaderVolumes);
 
-  iframe.src = soundcloudEmbedSrc(jukeboxTracks[firstPlayable].soundcloud_url);
-  jukeboxIndex = firstPlayable;
-  updateJukeboxDisplay();
+  /* Charge d'office les 2 premiers titres lisibles sur A et B, sans lancer la lecture. */
+  const playable = djTracks.map((m, i) => i).filter(i => isPlayableSoundcloud(djTracks[i].soundcloud_url));
+  if (playable[0] !== undefined) loadDeck('a', playable[0], false);
+  if (playable[1] !== undefined) loadDeck('b', playable[1], false);
+}
 
-  const attachWidget = () => {
+function loadDeck(deck, index, autoplay = true) {
+  const mix   = djTracks[index];
+  const state = deckState[deck];
+  if (!mix || !state || !isPlayableSoundcloud(mix.soundcloud_url)) return;
+
+  state.trackIndex = index;
+  const trackLabel = document.getElementById(state.trackLabelId);
+  if (trackLabel) trackLabel.textContent = mix.title;
+  document.querySelectorAll(`.dj-load-btn[data-deck="${deck}"]`).forEach(btn => {
+    btn.classList.toggle('loaded', Number(btn.dataset.index) === index);
+  });
+
+  const url     = soundcloudEmbedSrc(mix.soundcloud_url);
+  const iframe  = document.getElementById(state.iframeId);
+
+  const bindWidgetEvents = () => {
     if (!window.SC) return;
-    jukeboxWidget = SC.Widget(iframe);
-    jukeboxWidget.bind(SC.Widget.Events.READY, () => {
-      jukeboxWidgetReady = true;
-      const btn = document.getElementById('jukebox-play-btn');
+    state.widget = SC.Widget(iframe);
+    state.widget.bind(SC.Widget.Events.READY, () => {
+      state.ready = true;
+      const btn = document.getElementById(state.playBtnId);
       if (btn) btn.disabled = false;
+      state.widget.setVolume(getDeckVolume(deck));
+      if (autoplay) state.widget.play();
     });
-    jukeboxWidget.bind(SC.Widget.Events.PLAY,  () => setJukeboxPlaying(true));
-    jukeboxWidget.bind(SC.Widget.Events.PAUSE, () => setJukeboxPlaying(false));
-    jukeboxWidget.bind(SC.Widget.Events.FINISH, playNextJukeboxTrack);
+    state.widget.bind(SC.Widget.Events.PLAY,   () => setDeckPlaying(deck, true));
+    state.widget.bind(SC.Widget.Events.PAUSE,  () => setDeckPlaying(deck, false));
+    state.widget.bind(SC.Widget.Events.FINISH, () => setDeckPlaying(deck, false));
   };
-  iframe.addEventListener('load', attachWidget, { once: true });
 
-  document.getElementById('jukebox-play-btn')?.addEventListener('click', toggleJukeboxPlayback);
-}
-
-function loadJukeboxTrack(index, autoplay) {
-  const mix = jukeboxTracks[index];
-  if (!mix || !isPlayableSoundcloud(mix.soundcloud_url)) return;
-  jukeboxIndex = index;
-  updateJukeboxDisplay();
-
-  const url = soundcloudEmbedSrc(mix.soundcloud_url);
-  if (jukeboxWidget && jukeboxWidgetReady) {
-    jukeboxWidget.load(url, { callback: () => { if (autoplay) jukeboxWidget.play(); } });
+  if (state.widget && state.ready) {
+    state.widget.load(url, { callback: () => { if (autoplay) state.widget.play(); } });
   } else {
-    const iframe = document.getElementById('jukebox-iframe');
     iframe.src = url;
-    iframe.addEventListener('load', () => {
-      jukeboxWidget = SC.Widget(iframe);
-      jukeboxWidget.bind(SC.Widget.Events.READY, () => { jukeboxWidgetReady = true; if (autoplay) jukeboxWidget.play(); });
-      jukeboxWidget.bind(SC.Widget.Events.PLAY,  () => setJukeboxPlaying(true));
-      jukeboxWidget.bind(SC.Widget.Events.PAUSE, () => setJukeboxPlaying(false));
-      jukeboxWidget.bind(SC.Widget.Events.FINISH, playNextJukeboxTrack);
-    }, { once: true });
+    iframe.addEventListener('load', bindWidgetEvents, { once: true });
   }
 }
 
-function toggleJukeboxPlayback() {
-  if (!jukeboxWidget || !jukeboxWidgetReady) return;
-  jukeboxPlaying ? jukeboxWidget.pause() : jukeboxWidget.play();
+function toggleDeck(deck) {
+  const state = deckState[deck];
+  if (!state.widget || !state.ready) return;
+  state.playing ? state.widget.pause() : state.widget.play();
 }
 
-function playNextJukeboxTrack() {
-  const playable = jukeboxTracks.map((m, i) => i).filter(i => isPlayableSoundcloud(jukeboxTracks[i].soundcloud_url));
-  if (!playable.length) return;
-  const pos = playable.indexOf(jukeboxIndex);
-  loadJukeboxTrack(playable[(pos + 1) % playable.length], true);
+function setDeckPlaying(deck, playing) {
+  const state = deckState[deck];
+  state.playing = playing;
+  document.getElementById(state.deckElId)?.classList.toggle('playing', playing);
+  const btn = document.getElementById(state.playBtnId);
+  if (btn) {
+    btn.querySelector('.play-icon').style.display  = playing ? 'none' : '';
+    btn.querySelector('.pause-icon').style.display = playing ? '' : 'none';
+  }
+  playing ? startDeckBeat(deck) : stopDeckBeat(deck);
+  animateDeckMeter(deck);
 }
 
-function updateJukeboxDisplay() {
-  const mix = jukeboxTracks[jukeboxIndex];
-  const nowPlayingEl = document.getElementById('jukebox-now-playing');
-  if (nowPlayingEl && mix) nowPlayingEl.textContent = mix.title;
-  document.querySelectorAll('.jukebox-track').forEach(btn => {
-    btn.classList.toggle('active', Number(btn.dataset.index) === jukeboxIndex);
+/* ── Crossfader : contrôle le vrai volume de chaque platine (pas juste un habillage) ── */
+function getDeckVolume(deck) {
+  const x = Number(document.getElementById('dj-crossfader')?.value ?? 50);
+  return deck === 'a' ? 100 - x : x;
+}
+function updateCrossfaderVolumes() {
+  ['a', 'b'].forEach(deck => {
+    const state = deckState[deck];
+    if (state.widget && state.ready) state.widget.setVolume(getDeckVolume(deck));
   });
 }
 
-function setJukeboxPlaying(playing) {
-  jukeboxPlaying = playing;
-  document.getElementById('jukebox')?.classList.toggle('playing', playing);
-  document.querySelector('.jukebox-track.active')?.classList.toggle('playing', playing);
-  const playBtn = document.getElementById('jukebox-play-btn');
-  if (playBtn) {
-    playBtn.querySelector('.play-icon').style.display  = playing ? 'none' : '';
-    playBtn.querySelector('.pause-icon').style.display = playing ? '' : 'none';
-  }
-  playing ? startJukeboxBeat() : stopJukeboxBeat();
-}
-
-/* Pulsation rythmique simulée : le lecteur SoundCloud intégré ne donne accès ni au
-   signal audio ni à son tempo réel (autre domaine), donc impossible d'analyser le
-   vrai rythme du morceau. On simule plutôt une pulsation à intervalle irrégulier
-   (comme un tempo humain) pour donner une impression vivante pendant la lecture. */
-let jukeboxBeatTimer = null;
-function startJukeboxBeat() {
-  stopJukeboxBeat();
+/* Pulsation rythmique simulée par platine : le lecteur SoundCloud intégré ne donne
+   accès ni au signal audio ni au tempo réel (autre domaine), donc impossible
+   d'analyser le vrai rythme. Chaque platine pulse à son propre tempo irrégulier
+   simulé pendant sa lecture, pour une sensation vivante — les deux peuvent
+   tourner en même temps, comme un vrai mix. */
+const deckBeatTimers = { a: null, b: null };
+function startDeckBeat(deck) {
+  stopDeckBeat(deck);
   const tick = () => {
-    const jukebox = document.getElementById('jukebox');
-    jukebox?.classList.add('beat');
-    setTimeout(() => jukebox?.classList.remove('beat'), 110);
-    jukeboxBeatTimer = setTimeout(tick, 340 + Math.random() * 220);
+    const el = document.getElementById(deckState[deck].deckElId);
+    el?.classList.add('beat');
+    setTimeout(() => el?.classList.remove('beat'), 110);
+    deckBeatTimers[deck] = setTimeout(tick, 340 + Math.random() * 220);
   };
   tick();
 }
-function stopJukeboxBeat() {
-  clearTimeout(jukeboxBeatTimer);
-  jukeboxBeatTimer = null;
-  document.getElementById('jukebox')?.classList.remove('beat');
+function stopDeckBeat(deck) {
+  clearTimeout(deckBeatTimers[deck]);
+  deckBeatTimers[deck] = null;
+  document.getElementById(deckState[deck].deckElId)?.classList.remove('beat');
+}
+
+/* VU-mètre : animation visuelle (pas une vraie mesure de niveau, même limite que
+   la pulsation — aucun accès au signal audio réel du lecteur intégré). */
+const meterTimers = { a: null, b: null };
+function animateDeckMeter(deck) {
+  clearInterval(meterTimers[deck]);
+  const bars = document.querySelectorAll(`#${deckState[deck].meterId} span`);
+  if (!deckState[deck].playing) {
+    bars.forEach(b => { b.style.height = '18%'; });
+    return;
+  }
+  meterTimers[deck] = setInterval(() => {
+    bars.forEach(b => { b.style.height = (15 + Math.random() * 85) + '%'; });
+  }, 140);
 }
 
 /* ── Tarifs / Configurateur de soirée ──
@@ -642,7 +654,7 @@ function escapeHtml(str) {
   fetch('data/data.json')
     .then(res => res.json())
     .then(data => {
-      renderJukebox(data.mixes || []);
+      renderDjConsole(data.mixes || []);
       staticEvents = data.events || [];
       mergeAndRenderEvents();
       renderPricingConfigurator(data.pricing || [], data.pricingOptions || []);

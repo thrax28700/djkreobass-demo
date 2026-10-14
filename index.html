@@ -276,37 +276,65 @@
     </div>
   </section>
 
-  <!-- ═══════ MIXES — JUKEBOX ═══════ -->
+  <!-- ═══════ MIXES — TABLE DE MIXAGE ═══════ -->
   <section class="mixes" id="mixes" aria-labelledby="mixes-title">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Écouter</span>
-        <h2 class="section-title" id="mixes-title">Le Jukebox</h2>
+        <h2 class="section-title" id="mixes-title">La Table de Mixage</h2>
       </div>
-      <div class="jukebox" id="jukebox">
-        <div class="jukebox-top">
-          <div class="jukebox-tube jukebox-tube-left" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-          <div class="jukebox-tube jukebox-tube-right" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-          <div class="jukebox-dome">
+
+      <div class="dj-console" id="dj-console">
+        <div class="dj-deck" id="deck-a">
+          <span class="dj-deck-label">A</span>
+          <div class="dj-platter">
             <div class="vinyl-disc"><div class="vinyl-center"></div></div>
           </div>
-          <div class="jukebox-lights" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <div class="jukebox-display">
-            <p class="jukebox-now-playing" id="jukebox-now-playing">Chargement…</p>
-          </div>
-          <button type="button" class="jukebox-play-btn" id="jukebox-play-btn" aria-label="Lecture / Pause" disabled>
+          <div class="dj-deck-display"><p class="dj-deck-track" id="deck-a-track">Choisis un titre dans la playlist</p></div>
+          <button type="button" class="dj-deck-play" id="deck-a-play" aria-label="Lecture / Pause — Platine A" disabled>
             <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
           </button>
         </div>
-        <div class="jukebox-chrome-line" aria-hidden="true"></div>
-        <div class="jukebox-grille" aria-hidden="true"></div>
-        <div class="jukebox-tracklist" id="jukebox-tracklist"></div>
-        <div class="jukebox-feet" aria-hidden="true"><span></span><span></span></div>
+
+        <div class="dj-mixer">
+          <div class="dj-meters" aria-hidden="true">
+            <div class="dj-meter" id="meter-a"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="dj-meter" id="meter-b"><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="dj-knobs" aria-hidden="true">
+            <span class="dj-knob"></span><span class="dj-knob"></span><span class="dj-knob"></span>
+          </div>
+          <div class="dj-logo">KREOBASS</div>
+          <div class="dj-crossfader">
+            <span class="dj-crossfader-label">A</span>
+            <input type="range" class="dj-crossfader-input" id="dj-crossfader" min="0" max="100" value="50" aria-label="Balance entre la platine A et la platine B">
+            <span class="dj-crossfader-label">B</span>
+          </div>
+        </div>
+
+        <div class="dj-deck" id="deck-b">
+          <span class="dj-deck-label">B</span>
+          <div class="dj-platter">
+            <div class="vinyl-disc"><div class="vinyl-center"></div></div>
+          </div>
+          <div class="dj-deck-display"><p class="dj-deck-track" id="deck-b-track">Choisis un titre dans la playlist</p></div>
+          <button type="button" class="dj-deck-play" id="deck-b-play" aria-label="Lecture / Pause — Platine B" disabled>
+            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+        </div>
       </div>
-      <div class="jukebox-player"><iframe id="jukebox-iframe" title="Lecteur SoundCloud du jukebox" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe></div>
+
+      <div class="dj-playlist">
+        <span class="dj-playlist-title">Playlist</span>
+        <div class="dj-playlist-list" id="dj-playlist-list"></div>
+      </div>
+
+      <div class="dj-players">
+        <iframe id="deck-a-iframe" title="Lecteur SoundCloud — Platine A" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe>
+        <iframe id="deck-b-iframe" title="Lecteur SoundCloud — Platine B" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe>
+      </div>
     </div>
   </section>
 
