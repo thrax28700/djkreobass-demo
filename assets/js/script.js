@@ -234,6 +234,28 @@ function setJukeboxPlaying(playing) {
     playBtn.querySelector('.play-icon').style.display  = playing ? 'none' : '';
     playBtn.querySelector('.pause-icon').style.display = playing ? '' : 'none';
   }
+  playing ? startJukeboxBeat() : stopJukeboxBeat();
+}
+
+/* Pulsation rythmique simulée : le lecteur SoundCloud intégré ne donne accès ni au
+   signal audio ni à son tempo réel (autre domaine), donc impossible d'analyser le
+   vrai rythme du morceau. On simule plutôt une pulsation à intervalle irrégulier
+   (comme un tempo humain) pour donner une impression vivante pendant la lecture. */
+let jukeboxBeatTimer = null;
+function startJukeboxBeat() {
+  stopJukeboxBeat();
+  const tick = () => {
+    const jukebox = document.getElementById('jukebox');
+    jukebox?.classList.add('beat');
+    setTimeout(() => jukebox?.classList.remove('beat'), 110);
+    jukeboxBeatTimer = setTimeout(tick, 340 + Math.random() * 220);
+  };
+  tick();
+}
+function stopJukeboxBeat() {
+  clearTimeout(jukeboxBeatTimer);
+  jukeboxBeatTimer = null;
+  document.getElementById('jukebox')?.classList.remove('beat');
 }
 
 /* ── Tarifs / Configurateur de soirée ──
