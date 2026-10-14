@@ -276,14 +276,32 @@
     </div>
   </section>
 
-  <!-- ═══════ MIXES ═══════ -->
+  <!-- ═══════ MIXES — JUKEBOX ═══════ -->
   <section class="mixes" id="mixes" aria-labelledby="mixes-title">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Écouter</span>
-        <h2 class="section-title" id="mixes-title">Mes Mixes</h2>
+        <h2 class="section-title" id="mixes-title">Le Jukebox</h2>
       </div>
-      <div class="mixes-grid" id="mixes-grid"></div>
+      <div class="jukebox" id="jukebox">
+        <div class="jukebox-cabinet">
+          <div class="jukebox-dome">
+            <div class="vinyl-disc"><div class="vinyl-center"></div></div>
+          </div>
+          <div class="jukebox-lights" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="jukebox-display">
+            <p class="jukebox-now-playing" id="jukebox-now-playing">Chargement…</p>
+          </div>
+          <button type="button" class="jukebox-play-btn" id="jukebox-play-btn" aria-label="Lecture / Pause" disabled>
+            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+        </div>
+        <div class="jukebox-tracklist" id="jukebox-tracklist"></div>
+      </div>
+      <div class="jukebox-player"><iframe id="jukebox-iframe" title="Lecteur SoundCloud du jukebox" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe></div>
     </div>
   </section>
 
@@ -581,6 +599,7 @@
 
   <script src="assets/js/firebase-config.js"></script>
   <script type="module" src="assets/js/booking.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
 </html>

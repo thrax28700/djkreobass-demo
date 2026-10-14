@@ -98,14 +98,7 @@ function animateTicker(track) {
   requestAnimationFrame(step);
 }
 
-/* ── Genre color helper ── */
-function genreColor(genre) {
-  const g = genre.toLowerCase();
-  if (g.includes('soundsystem') || g.includes('reggae') || g.includes('bass')) return 'g-bleu';
-  return '';
-}
-
-/* ── Mixes (rendu + lecteur SoundCloud) ── */
+/* ── Mixes / Jukebox : détection des pistes lisibles via SoundCloud ── */
 function isPlayableSoundcloud(url) {
   return typeof url === 'string' && /^https?:\/\/(www\.)?(soundcloud\.com|on\.soundcloud\.com)\//.test(url);
 }
@@ -125,88 +118,122 @@ function soundcloudEmbedSrc(url) {
   return `https://w.soundcloud.com/player/?${params.toString()}`;
 }
 
-function renderMixes(mixes) {
-  const grid = document.getElementById('mixes-grid');
-  if (!grid) return;
-  grid.innerHTML = mixes.map((mix, i) => {
+/* ── Jukebox (un seul lecteur piloté via l'API SoundCloud Widget + liste de titres) ── */
+let jukeboxTracks  = [];
+let jukeboxIndex   = -1;
+let jukeboxWidget  = null;
+let jukeboxPlaying = false;
+let jukeboxWidgetReady = false;
+
+function renderJukebox(mixes) {
+  jukeboxTracks = mixes || [];
+  const list    = document.getElementById('jukebox-tracklist');
+  const iframe  = document.getElementById('jukebox-iframe');
+  const nowPlayingEl = document.getElementById('jukebox-now-playing');
+  if (!list || !iframe) return;
+
+  list.innerHTML = jukeboxTracks.map((mix, i) => {
     const playable = isPlayableSoundcloud(mix.soundcloud_url);
     return `
-    <article class="mix-card ${playable ? 'mix-card-live' : ''} reveal" data-index="${i}" aria-label="${escapeHtml(mix.title)}">
-      <div class="mix-artwork ${playable ? 'has-player' : ''}">
-        ${playable ? `
-        <iframe class="mix-soundcloud" width="100%" height="100%" scrolling="no" frameborder="no"
-                loading="lazy" allow="autoplay"
-                title="Lecteur SoundCloud — ${escapeHtml(mix.title)}"
-                src="${soundcloudEmbedSrc(mix.soundcloud_url)}"></iframe>
-        ` : `
-        <div class="mix-artwork-placeholder">
-          <div class="vinyl-disc"><div class="vinyl-center"></div></div>
-        </div>
-        <button class="mix-play-btn" aria-label="Écouter ${escapeHtml(mix.title)}">
-          <svg class="play-icon"  viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-        </button>
-        `}
-      </div>
-      <div class="mix-info">
-        <h3 class="mix-title">${escapeHtml(mix.title)}</h3>
-        ${mix.genre
-          ? `<span class="mix-genre ${genreColor(mix.genre)}">${escapeHtml(mix.genre)}</span>`
-          : (playable ? '<span class="mix-genre mix-genre-live">SoundCloud</span>' : '')}
-        ${(mix.duration || mix.year) ? `
-        <div class="mix-meta">
-          ${mix.duration ? `
-          <span class="mix-duration">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            ${escapeHtml(mix.duration)}
-          </span>` : ''}
-          ${mix.year ? `<span class="mix-date">${escapeHtml(mix.year)}</span>` : ''}
-        </div>` : ''}
-        ${!playable ? `
-        <div class="mix-waveform" aria-hidden="true">
-          ${randomWaveform(i)}
-        </div>` : ''}
-      </div>
-    </article>`;
+    <button type="button" class="jukebox-track ${playable ? '' : 'jukebox-track-disabled'}" data-index="${i}" ${playable ? '' : 'disabled'}>
+      <span class="jukebox-track-num">${String(i + 1).padStart(2, '0')}</span>
+      <span class="jukebox-track-info">
+        <span class="jukebox-track-title">${escapeHtml(mix.title)}</span>
+        ${mix.genre ? `<span class="jukebox-track-genre">${escapeHtml(mix.genre)}</span>` : ''}
+      </span>
+      <span class="jukebox-track-play" aria-hidden="true">
+        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </span>
+    </button>`;
   }).join('');
 
-  initMixCards();
-}
-
-function randomWaveform(seed) {
-  let bars = '';
-  let s = seed * 17 + 1;
-  for (let i = 0; i < 40; i++) {
-    s = (s * 9301 + 49297) % 233280;
-    const h = 12 + Math.floor((s / 233280) * 88);
-    bars += `<div class="waveform-bar" style="height:${h}%"></div>`;
-  }
-  return bars;
-}
-
-function initMixCards() {
-  let currentCard = null;
-  document.querySelectorAll('.mix-card').forEach(card => {
-    const btn       = card.querySelector('.mix-play-btn');
-    const playIcon  = card.querySelector('.play-icon');
-    const pauseIcon = card.querySelector('.pause-icon');
-    if (!btn) return;
-
+  list.querySelectorAll('.jukebox-track:not([disabled])').forEach(btn => {
     btn.addEventListener('click', () => {
-      const isPlaying = card.classList.contains('playing');
-
-      if (currentCard && currentCard !== card) {
-        currentCard.classList.remove('playing');
-        currentCard.querySelector('.play-icon').style.display  = '';
-        currentCard.querySelector('.pause-icon').style.display = 'none';
-      }
-
-      card.classList.toggle('playing', !isPlaying);
-      playIcon.style.display  = isPlaying ? ''       : 'none';
-      pauseIcon.style.display = isPlaying ? 'none'   : '';
-      currentCard = isPlaying ? null : card;
+      const i = Number(btn.dataset.index);
+      i === jukeboxIndex ? toggleJukeboxPlayback() : loadJukeboxTrack(i, true);
     });
   });
+
+  const firstPlayable = jukeboxTracks.findIndex(m => isPlayableSoundcloud(m.soundcloud_url));
+  if (firstPlayable === -1) {
+    if (nowPlayingEl) nowPlayingEl.textContent = 'Mixes à venir';
+    return;
+  }
+
+  iframe.src = soundcloudEmbedSrc(jukeboxTracks[firstPlayable].soundcloud_url);
+  jukeboxIndex = firstPlayable;
+  updateJukeboxDisplay();
+
+  const attachWidget = () => {
+    if (!window.SC) return;
+    jukeboxWidget = SC.Widget(iframe);
+    jukeboxWidget.bind(SC.Widget.Events.READY, () => {
+      jukeboxWidgetReady = true;
+      const btn = document.getElementById('jukebox-play-btn');
+      if (btn) btn.disabled = false;
+    });
+    jukeboxWidget.bind(SC.Widget.Events.PLAY,  () => setJukeboxPlaying(true));
+    jukeboxWidget.bind(SC.Widget.Events.PAUSE, () => setJukeboxPlaying(false));
+    jukeboxWidget.bind(SC.Widget.Events.FINISH, playNextJukeboxTrack);
+  };
+  iframe.addEventListener('load', attachWidget, { once: true });
+
+  document.getElementById('jukebox-play-btn')?.addEventListener('click', toggleJukeboxPlayback);
+}
+
+function loadJukeboxTrack(index, autoplay) {
+  const mix = jukeboxTracks[index];
+  if (!mix || !isPlayableSoundcloud(mix.soundcloud_url)) return;
+  jukeboxIndex = index;
+  updateJukeboxDisplay();
+
+  const url = soundcloudEmbedSrc(mix.soundcloud_url);
+  if (jukeboxWidget && jukeboxWidgetReady) {
+    jukeboxWidget.load(url, { callback: () => { if (autoplay) jukeboxWidget.play(); } });
+  } else {
+    const iframe = document.getElementById('jukebox-iframe');
+    iframe.src = url;
+    iframe.addEventListener('load', () => {
+      jukeboxWidget = SC.Widget(iframe);
+      jukeboxWidget.bind(SC.Widget.Events.READY, () => { jukeboxWidgetReady = true; if (autoplay) jukeboxWidget.play(); });
+      jukeboxWidget.bind(SC.Widget.Events.PLAY,  () => setJukeboxPlaying(true));
+      jukeboxWidget.bind(SC.Widget.Events.PAUSE, () => setJukeboxPlaying(false));
+      jukeboxWidget.bind(SC.Widget.Events.FINISH, playNextJukeboxTrack);
+    }, { once: true });
+  }
+}
+
+function toggleJukeboxPlayback() {
+  if (!jukeboxWidget || !jukeboxWidgetReady) return;
+  jukeboxPlaying ? jukeboxWidget.pause() : jukeboxWidget.play();
+}
+
+function playNextJukeboxTrack() {
+  const playable = jukeboxTracks.map((m, i) => i).filter(i => isPlayableSoundcloud(jukeboxTracks[i].soundcloud_url));
+  if (!playable.length) return;
+  const pos = playable.indexOf(jukeboxIndex);
+  loadJukeboxTrack(playable[(pos + 1) % playable.length], true);
+}
+
+function updateJukeboxDisplay() {
+  const mix = jukeboxTracks[jukeboxIndex];
+  const nowPlayingEl = document.getElementById('jukebox-now-playing');
+  if (nowPlayingEl && mix) nowPlayingEl.textContent = mix.title;
+  document.querySelectorAll('.jukebox-track').forEach(btn => {
+    btn.classList.toggle('active', Number(btn.dataset.index) === jukeboxIndex);
+  });
+}
+
+function setJukeboxPlaying(playing) {
+  jukeboxPlaying = playing;
+  document.getElementById('jukebox')?.classList.toggle('playing', playing);
+  document.querySelector('.jukebox-track.active')?.classList.toggle('playing', playing);
+  const playBtn = document.getElementById('jukebox-play-btn');
+  if (playBtn) {
+    playBtn.querySelector('.play-icon').style.display  = playing ? 'none' : '';
+    playBtn.querySelector('.pause-icon').style.display = playing ? '' : 'none';
+  }
 }
 
 /* ── Tarifs / Configurateur de soirée ──
@@ -593,7 +620,7 @@ function escapeHtml(str) {
   fetch('data/data.json')
     .then(res => res.json())
     .then(data => {
-      renderMixes(data.mixes || []);
+      renderJukebox(data.mixes || []);
       staticEvents = data.events || [];
       mergeAndRenderEvents();
       renderPricingConfigurator(data.pricing || [], data.pricingOptions || []);
