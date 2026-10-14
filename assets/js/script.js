@@ -1,6 +1,31 @@
 /* DJ KREOBASS - Portfolio JavaScript */
 'use strict';
 
+/* ── Drop sonore à l'ouverture du site ──
+   Les navigateurs bloquent la lecture automatique de son tant que le visiteur
+   n'a pas interagi avec la page : on tente de le jouer tout de suite, et si
+   c'est refusé, on le joue au tout premier clic/toucher/touche pressée. */
+(function initIntroDrop() {
+  const drop = document.getElementById('intro-drop');
+  if (!drop) return;
+
+  const playOnce = () => {
+    drop.play().catch(() => {});
+  };
+
+  const playAttempt = drop.play();
+  if (playAttempt && typeof playAttempt.catch === 'function') {
+    playAttempt.catch(() => {
+      const events = ['pointerdown', 'keydown', 'touchstart'];
+      const trigger = () => {
+        playOnce();
+        events.forEach(ev => document.removeEventListener(ev, trigger));
+      };
+      events.forEach(ev => document.addEventListener(ev, trigger, { once: true }));
+    });
+  }
+})();
+
 /* ── Navbar scroll ── */
 (function initNavbar() {
   const navbar = document.getElementById('navbar');
