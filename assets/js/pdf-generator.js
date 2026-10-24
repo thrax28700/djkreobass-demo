@@ -47,7 +47,7 @@
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(230, 224, 200);
-    doc.text('Animateur & Platiniste — Centre-Val de Loire', 14, 23);
+    doc.text('Animateur — Centre-Val de Loire', 14, 23);
     doc.text(`${info.phone || ''}   ·   ${info.email || ''}`, 14, 28.5);
 
     doc.setTextColor(...goldRGB);

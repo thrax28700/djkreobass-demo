@@ -1,6 +1,6 @@
 # DJ KREOBASS — Site vitrine (démo)
 
-Site vitrine statique pour DJ KREOBASS, animateur & platiniste professionnel en Centre-Val de Loire (Chartres, Eure-et-Loir, Sarthe). Thème noir & doré, PWA installable, QR code fourni.
+Site vitrine statique pour DJ KREOBASS, animateur professionnel en Centre-Val de Loire (Chartres, Eure-et-Loir, Sarthe). Thème noir & doré, PWA installable, QR code fourni.
 
 ## Structure
 
