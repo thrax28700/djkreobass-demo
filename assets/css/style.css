@@ -1332,26 +1332,61 @@ nav, section, footer { position: relative; z-index: 2; }
 .reviews-widget .btn { margin: 0 auto; }
 
 /* ══════════════════════════
-   VIDÉOS
+   CHOPE & COMPAGNIE (CHÂTEAUDUN)
 ══════════════════════════ */
-.videos { padding: 120px 0; }
-.videos-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+.venue-spotlight { padding: 120px 0; }
+.venue-spotlight-city {
+  text-align: center;
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-top: -40px;
+  margin-bottom: 20px;
 }
-.video-card {
+.venue-spotlight-intro {
+  max-width: 640px;
+  margin: 0 auto 56px;
+  text-align: center;
+  color: var(--text2);
+}
+.venue-spotlight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.venue-media {
   position: relative;
   border-radius: var(--r);
   overflow: hidden;
   border: 1px solid var(--border);
   background: #000;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 4 / 3;
   transition: border-color var(--t), box-shadow var(--t);
 }
-.video-card-wide { grid-column: span 2; aspect-ratio: 16 / 9; }
-.video-card:hover { border-color: var(--border-or); box-shadow: var(--shadow-lg), 0 0 24px rgba(212,175,55,0.12); }
-.video-card video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
+.venue-media-wide { grid-column: span 2; aspect-ratio: 16 / 9; }
+.venue-media:hover { border-color: var(--border-or); box-shadow: var(--shadow-lg), 0 0 24px rgba(212,175,55,0.12); }
+.venue-media video,
+.venue-media img { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+.venue-media-wide video { object-fit: contain; }
+.venue-media-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(212,175,55,0.03);
+  border: 2px dashed rgba(212,175,55,0.3);
+  color: var(--text3);
+}
+.venue-media-empty svg { width: 36px; height: 36px; }
+.venue-media-empty span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
 
 /* ══════════════════════════
    EVENTS
@@ -1801,8 +1836,6 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(
   .about-image { max-width: 380px; margin: 0 auto; }
   .contact-grid { grid-template-columns: 1fr; gap: 48px; }
   .gallery-item { width: 190px; margin: 0 -28px 28px; }
-  .videos-grid { grid-template-columns: repeat(2, 1fr); }
-  .video-card-wide { grid-column: span 2; }
   .footer-content { grid-template-columns:1fr; text-align:center; }
   .footer-socials { justify-content:center; }
   .footer-brand { justify-content: center; }
@@ -1843,8 +1876,9 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(
   .form-row { grid-template-columns:1fr; }
   .contact-form { padding:24px; }
   .gallery-item { width: 150px; margin: 0 -22px 22px; }
-  .videos-grid { grid-template-columns: 1fr; }
-  .video-card-wide { grid-column: span 1; }
+  .venue-spotlight-grid { grid-template-columns: 1fr; }
+  .venue-media-wide { grid-column: span 1; }
+  .venue-spotlight-city { margin-top: -24px; }
   .pricing-grid { grid-template-columns: 1fr; }
   .reviews-highlights { grid-template-columns: 1fr; }
 }
