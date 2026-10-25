@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>DJ KREOBASS | Animateur — Centre-Val de Loire</title>
-  <meta name="description" content="DJ KREOBASS — DJ polyvalent « all styles », des années 80 à aujourd'hui. Mariages, anniversaires, séminaires, soirées bars &amp; guinguettes à Chartres, Eure-et-Loir et Sarthe.">
+  <title>DJ KREOBASS | DJ animateur à Chartres, Centre-Val de Loire</title>
+  <meta name="description" content="DJ KREOBASS, DJ polyvalent « all styles », des années 80 à aujourd'hui. Mariages, anniversaires, séminaires, soirées bars &amp; guinguettes à Chartres, Eure-et-Loir et Sarthe.">
   <meta name="keywords"    content="DJ Kreobass, DJ Chartres, DJ Eure-et-Loir, DJ Sarthe, DJ mariage, DJ anniversaire, DJ entreprise, animateur soirée, all styles">
-  <meta property="og:title"       content="DJ KREOBASS | Animateur — Centre-Val de Loire">
-  <meta property="og:description" content="DJ polyvalent « all styles » — des années 80 à aujourd'hui. Mariages, anniversaires, séminaires, soirées.">
+  <meta property="og:title"       content="DJ KREOBASS | DJ animateur à Chartres, Centre-Val de Loire">
+  <meta property="og:description" content="DJ polyvalent « all styles », des années 80 à aujourd'hui. Mariages, anniversaires, séminaires, soirées.">
   <meta property="og:type"        content="website">
   <meta property="og:image"       content="assets/images/hero.png">
+  <meta name="robots" content="index, follow, noai, noimageai">
+  <meta name="copyright" content="DJ KREOBASS">
   <meta name="theme-color" content="#050504">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/icon-32.png">
@@ -19,16 +21,12 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:ital,wght@0,200;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <audio id="intro-drop" src="assets/audio/intro-drop.mp3" preload="auto"></audio>
   <script>
-    /* Déclenché ici, au tout début du body, pour partir le plus vite possible —
-       plutôt que dans script.js, chargé en bas de page après les grosses images
-       et vidéos. Les navigateurs bloquant le son sans interaction préalable, on
-       tente la lecture immédiate puis on se rattrape au premier clic/toucher. */
     (function () {
       var drop = document.getElementById('intro-drop');
       if (!drop) return;
@@ -46,12 +44,9 @@
     })();
   </script>
 
-  <div class="flag-background" aria-hidden="true"></div>
-
-  <!-- ═══════ NAVIGATION ═══════ -->
   <nav class="navbar" id="navbar" aria-label="Navigation principale">
     <div class="nav-container">
-      <a href="#home" class="nav-logo" aria-label="DJ KREOBASS — Accueil">
+      <a href="#home" class="nav-logo" aria-label="DJ KREOBASS, accueil">
         <img src="assets/images/logo.png" alt="Logo DJ KREOBASS">
       </a>
       <ul class="nav-menu" id="nav-menu">
@@ -60,7 +55,6 @@
         <li><a href="#pricing" class="nav-link">Tarifs</a></li>
         <li><a href="#mixes"   class="nav-link">Mixes</a></li>
         <li><a href="#chope-compagnie"  class="nav-link">Chope &amp; Co</a></li>
-        <li><a href="#reviews" class="nav-link">Avis</a></li>
         <li><a href="#contact" class="nav-link nav-cta">Contact</a></li>
       </ul>
       <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
@@ -69,7 +63,6 @@
     </div>
   </nav>
 
-  <!-- ═══════ HERO ═══════ -->
   <section class="hero" id="home" aria-label="Présentation">
     <div class="stage-lights" aria-hidden="true">
       <span class="beam beam-1"></span>
@@ -79,22 +72,14 @@
       <span class="strobe"></span>
     </div>
     <div class="hero-content">
-      <div class="hero-eras">
-        <span class="era-pill">80's</span>
-        <span class="era-pill">90's</span>
-        <span class="era-pill">2000's</span>
-        <span class="era-pill">2010's</span>
-        <span class="era-pill">Aujourd'hui</span>
-      </div>
       <h1 class="hero-title">
         <span class="title-dj">Dj</span>
         <span class="title-name">KREO<span>BASS</span></span>
       </h1>
-      <p class="hero-desc">Animateur &nbsp;·&nbsp; All Styles &nbsp;·&nbsp; 80's à Aujourd'hui</p>
+      <p class="hero-desc">Animateur · All styles · Des années 80 à aujourd'hui</p>
       <div class="hero-buttons">
-        <a href="#mixes"   class="btn btn-primary">Écouter les Mixes</a>
-        <a href="#pricing" class="btn btn-bleu">Voir les Prestations</a>
-        <a href="#contact" class="btn btn-outline">Demander un Devis</a>
+        <a href="#mixes"   class="btn btn-primary">Écouter les mixes</a>
+        <a href="#contact" class="btn btn-outline">Demander un devis</a>
       </div>
       <div class="hero-socials">
         <a href="https://www.facebook.com/Deejaykreobass/" class="social-link" title="Facebook" aria-label="Facebook" rel="noopener" target="_blank">
@@ -114,23 +99,16 @@
         </a>
       </div>
     </div>
-    <div class="hero-scroll" aria-hidden="true">
-      <span>Défiler</span>
-      <div class="scroll-arrow"></div>
-    </div>
   </section>
 
-  <!-- ═══════ TICKER ═══════ -->
   <div class="music-ticker" aria-hidden="true">
     <div class="ticker-track" id="ticker-track"></div>
   </div>
 
-  <!-- ═══════ ABOUT ═══════ -->
   <section class="about" id="about" aria-labelledby="about-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">À Propos</span>
-        <h2 class="section-title" id="about-title">L'Artiste</h2>
+        <h2 class="section-title" id="about-title">Qui je suis</h2>
       </div>
       <div class="about-grid">
         <div class="about-image">
@@ -139,43 +117,20 @@
           </div>
           <div class="about-badge">
             <span class="badge-number">10+</span>
-            <span class="badge-text">Ans d'expérience</span>
+            <span class="badge-text">ans de platines</span>
           </div>
         </div>
         <div class="about-content">
-          <p class="about-intro">"Un DJ, toutes les musiques, toutes les générations…"</p>
           <p class="about-text">
-            <strong>DJ KREOBASS</strong> est un animateur professionnel <em>100% polyvalent</em>,
-            très actif en <strong>Centre-Val de Loire</strong> et dans les départements limitrophes
-            (Eure-et-Loir, Sarthe). Des hits <strong>disco des années 80</strong> aux
-            <strong>bangers d'aujourd'hui</strong>, en passant par le hip-hop, la house et l'électro :
-            il maîtrise tout, pour tous les publics.
+            DJ animateur basé à Chartres, je joue en Eure-et-Loir, dans la Sarthe et un peu partout
+            en Centre-Val de Loire. Mon truc, c'est de faire danser tout le monde : disco et funk des
+            années 80, hip-hop et R&amp;B des années 90, house, électro, et les sons qui tournent en ce moment.
           </p>
           <p class="about-text">
-            Sets généralistes <strong>« all styles »</strong>, réactivité (devis personnalisé en moins d'une heure)
-            et professionnalisme : il anime aussi bien des <strong>soirées en bars et guinguettes</strong>
-            (Chope et Compagnie, Les Fouleries…) que des <strong>mariages</strong>, <strong>anniversaires</strong>
-            et <strong>événements d'entreprise</strong>, avec du matériel de sonorisation et d'éclairage adapté
-            à chaque lieu.
+            On me retrouve en bar et en guinguette (Chope &amp; Compagnie, Les Fouleries…), mais aussi
+            en mariage, en anniversaire et en soirée d'entreprise. J'arrive avec ma sono et mes lumières,
+            adaptées à la salle.
           </p>
-          <div class="about-skills">
-            <div class="skill-item">
-              <span class="skill-name">Versatilité / All Styles</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="98"></div></div>
-            </div>
-            <div class="skill-item">
-              <span class="skill-name">Mariages &amp; Événements Privés</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
-            </div>
-            <div class="skill-item">
-              <span class="skill-name">Hip-Hop · R&amp;B · Dancehall</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
-            </div>
-            <div class="skill-item">
-              <span class="skill-name">Corporate &amp; Séminaires</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-            </div>
-          </div>
           <div class="about-stats">
             <div class="stat">
               <span class="stat-number" data-count="500">0</span>
@@ -187,7 +142,7 @@
             </div>
             <div class="stat">
               <span class="stat-number" data-count="15">0</span>
-              <span class="stat-label">Lieux Partenaires</span>
+              <span class="stat-label">Lieux</span>
             </div>
             <div class="stat">
               <span class="stat-number" data-count="10">0</span>
@@ -199,12 +154,10 @@
     </div>
   </section>
 
-  <!-- ═══════ ÈRES MUSICALES ═══════ -->
   <section class="eras" id="eras" aria-labelledby="eras-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Polyvalence</span>
-        <h2 class="section-title" id="eras-title">Toutes les Ères</h2>
+        <h2 class="section-title" id="eras-title">Toutes les époques</h2>
       </div>
       <div class="eras-grid">
         <div class="era-card era-80s">
@@ -255,12 +208,10 @@
     </div>
   </section>
 
-  <!-- ═══════ TARIFS / CONFIGURATEUR ═══════ -->
   <section class="pricing" id="pricing" aria-labelledby="pricing-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Prestations</span>
-        <h2 class="section-title" id="pricing-title">Composez Votre Soirée</h2>
+        <h2 class="section-title" id="pricing-title">Composez votre soirée</h2>
       </div>
 
       <div class="config-step" id="config-quiz-step">
@@ -298,12 +249,10 @@
     </div>
   </section>
 
-  <!-- ═══════ MIXES — TABLE DE MIXAGE ═══════ -->
   <section class="mixes" id="mixes" aria-labelledby="mixes-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Écouter</span>
-        <h2 class="section-title" id="mixes-title">La Table de Mixage</h2>
+        <h2 class="section-title" id="mixes-title">Mes mixes</h2>
       </div>
 
       <div class="dj-console" id="dj-console">
@@ -312,8 +261,8 @@
           <div class="dj-platter">
             <div class="vinyl-disc"><div class="vinyl-center"></div></div>
           </div>
-          <div class="dj-deck-display"><p class="dj-deck-track" id="deck-a-track">Choisis un titre dans la playlist</p></div>
-          <button type="button" class="dj-deck-play" id="deck-a-play" aria-label="Lecture / Pause — Platine A" disabled>
+          <div class="dj-deck-display"><p class="dj-deck-track" id="deck-a-track">Choisissez un titre</p></div>
+          <button type="button" class="dj-deck-play" id="deck-a-play" aria-label="Lecture / pause, platine A" disabled>
             <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
           </button>
@@ -340,8 +289,8 @@
           <div class="dj-platter">
             <div class="vinyl-disc"><div class="vinyl-center"></div></div>
           </div>
-          <div class="dj-deck-display"><p class="dj-deck-track" id="deck-b-track">Choisis un titre dans la playlist</p></div>
-          <button type="button" class="dj-deck-play" id="deck-b-play" aria-label="Lecture / Pause — Platine B" disabled>
+          <div class="dj-deck-display"><p class="dj-deck-track" id="deck-b-track">Choisissez un titre</p></div>
+          <button type="button" class="dj-deck-play" id="deck-b-play" aria-label="Lecture / pause, platine B" disabled>
             <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
           </button>
@@ -354,19 +303,17 @@
       </div>
 
       <div class="dj-players">
-        <iframe id="deck-a-iframe" title="Lecteur SoundCloud — Platine A" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe>
-        <iframe id="deck-b-iframe" title="Lecteur SoundCloud — Platine B" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe>
+        <iframe id="deck-a-iframe" title="Lecteur SoundCloud, platine A" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe>
+        <iframe id="deck-b-iframe" title="Lecteur SoundCloud, platine B" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"></iframe>
         <audio id="deck-a-audio" preload="none"></audio>
         <audio id="deck-b-audio" preload="none"></audio>
       </div>
     </div>
   </section>
 
-  <!-- ═══════ CHOPE & COMPAGNIE (CHÂTEAUDUN) ═══════ -->
   <section class="venue-spotlight" id="chope-compagnie" aria-labelledby="chope-compagnie-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Soirée</span>
         <h2 class="section-title" id="chope-compagnie-title">Chope &amp; Compagnie</h2>
       </div>
       <p class="venue-spotlight-city">Saint-Denis-Lanneray · Châteaudun</p>
@@ -383,13 +330,11 @@
           <h3>La soirée anniversaire</h3>
           <p class="venue-feature-date">Vendredi 23 octobre 2026 · 18h – 2h</p>
           <p>
-            Pour fêter la première année de Chope &amp; Compagnie, DJ KREOBASS a pris les platines
-            après le concert de Bruno Latournerie : robots géants, gâteau d'anniversaire et piste
-            pleine jusqu'à la fermeture.
+            Pour la première année de Chope &amp; Compagnie, j'ai pris les platines après le concert
+            de Bruno Latournerie. Robots géants, gâteau, et la piste pleine jusqu'à 2h.
           </p>
           <p>
-            Un lieu où DJ KREOBASS anime régulièrement des soirées — l'ambiance bar &amp; guinguette
-            telle qu'il la fait vivre.
+            J'y joue régulièrement. Si vous passez dans le coin un vendredi soir, venez dire bonjour.
           </p>
           <a href="#contact" class="btn btn-primary">
             Organiser votre soirée
@@ -400,64 +345,10 @@
     </div>
   </section>
 
-  <!-- ═══════ AVIS ═══════ -->
-  <section class="reviews" id="reviews" aria-labelledby="reviews-title">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Confiance</span>
-        <h2 class="section-title" id="reviews-title">Pourquoi Me Choisir</h2>
-      </div>
-      <div class="reviews-highlights">
-        <div class="highlight-card">
-          <div class="highlight-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z"/><circle cx="19" cy="5" r="1.2" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
-          </div>
-          <div class="highlight-title">Ambiance Festive</div>
-          <div class="highlight-text">Sets généralistes « all styles » qui font danser un public varié, en bar, guinguette ou salle de réception.</div>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          </div>
-          <div class="highlight-title">Réactivité</div>
-          <div class="highlight-text">Devis personnalisé envoyé généralement en moins d'une heure via la page Facebook DJ KREOBASS.</div>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.2"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
-          </div>
-          <div class="highlight-title">Polyvalence</div>
-          <div class="highlight-text">À l'aise aussi bien sur des événements corporate que sur des fêtes privées, mariages et anniversaires.</div>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-          </div>
-          <div class="highlight-title">Matériel Pro</div>
-          <div class="highlight-text">Sonorisation et éclairage adaptés à chaque lieu, pour une prestation clé en main.</div>
-        </div>
-      </div>
-      <div class="reviews-widget">
-        <div class="reviews-stars" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.2l7.1-.6z"/></svg>
-        </div>
-        <h3>Avis Google — bientôt disponibles ici</h3>
-        <p>Cet emplacement est prêt à afficher automatiquement les avis Google de la fiche établissement DJ KREOBASS dès sa mise en ligne. En attendant, retrouvez les retours et l'actualité sur la page Facebook officielle.</p>
-        <a href="https://www.facebook.com/Deejaykreobass/" class="btn btn-outline" target="_blank" rel="noopener">Voir la page Facebook</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════ GALLERY ═══════ -->
   <section class="gallery" id="gallery" aria-labelledby="gallery-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Galerie</span>
-        <h2 class="section-title" id="gallery-title">En Images</h2>
+        <h2 class="section-title" id="gallery-title">En images</h2>
       </div>
       <div class="gallery-grid">
         <div class="gallery-item gallery-item-1">
@@ -493,18 +384,16 @@
     </div>
   </section>
 
-  <!-- ═══════ CONTACT ═══════ -->
   <section class="contact" id="contact" aria-labelledby="contact-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Contact</span>
-        <h2 class="section-title" id="contact-title">Demande de Devis</h2>
+        <h2 class="section-title" id="contact-title">Demander un devis</h2>
       </div>
       <div class="alert alert-success" role="alert" id="form-success" hidden></div>
       <div class="contact-grid">
         <div class="contact-info">
-          <h3>Travaillons ensemble</h3>
-          <p>Disponible pour vos événements en Centre-Val de Loire et alentours — mariages, anniversaires, soirées bars &amp; guinguettes, séminaires et événements corporate.</p>
+          <h3>On en parle ?</h3>
+          <p>Mariage, anniversaire, soirée en bar ou événement d'entreprise : envoyez-moi la date et le lieu, je vous réponds rapidement avec un devis.</p>
           <div class="contact-items">
             <div class="contact-item">
               <div class="contact-icon contact-icon-whatsapp">
@@ -594,13 +483,12 @@
     </div>
   </section>
 
-  <!-- ═══════ FOOTER ═══════ -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
         <div class="footer-brand">
           <img src="assets/images/logo.png" alt="Logo DJ KREOBASS">
-          <p>Animateur — Centre-Val de Loire</p>
+          <p>DJ animateur · Chartres, Eure-et-Loir</p>
         </div>
         <nav class="footer-links" aria-label="Navigation secondaire">
           <a href="#home">Accueil</a>
@@ -629,12 +517,11 @@
         </div>
       </div>
       <p class="footer-bottom">
-        &copy; <span id="footer-year"></span> DJ KREOBASS &mdash; Tous droits réservés
+        &copy; <span id="footer-year"></span> DJ KREOBASS. Tous droits réservés. Reproduction interdite.
       </p>
     </div>
   </footer>
 
-  <!-- ═══════ BOUTON FLOTTANT WHATSAPP ═══════ -->
   <a class="whatsapp-float" href="https://wa.me/33666359065?text=Bonjour%20DJ%20KREOBASS%2C%20je%20souhaite%20demander%20un%20devis%20pour%20un%20%C3%A9v%C3%A9nement."
      target="_blank" rel="noopener" aria-label="Contacter DJ KREOBASS sur WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -643,7 +530,6 @@
     <span class="whatsapp-float-tooltip">Un devis en 2 minutes sur WhatsApp</span>
   </a>
 
-  <!-- ═══════ MODALE : détail d'une option ═══════ -->
   <div class="option-modal" id="option-modal" hidden>
     <div class="option-modal-card">
       <button type="button" class="option-modal-close" id="option-modal-close" aria-label="Fermer">✕</button>

@@ -43,12 +43,12 @@
   background: rgba(224,92,42,0.1);
   border: 1px solid rgba(224,92,42,0.3);
   color: #E5905C;
-  border-radius: 8px;
+  border-radius: var(--r);
   padding: 12px 16px;
   font-size: 0.82rem;
   margin-bottom: 20px;
 }
-.admin-warning code { background: rgba(0,0,0,0.3); padding: 1px 6px; border-radius: 4px; }
+.admin-warning code { background: rgba(0,0,0,0.3); padding: 1px 6px; border-radius: var(--r); }
 .admin-error {
   color: #E05C2A;
   font-size: 0.85rem;
@@ -60,7 +60,7 @@
   width: 100%;
   background: rgba(212,175,55,0.04);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r);
   padding: 12px 16px;
   color: var(--text);
   font-size: 0.95rem;
@@ -152,7 +152,7 @@
   font-size: 0.85rem;
   color: var(--text2);
   background: rgba(255,255,255,0.02);
-  border-radius: 8px;
+  border-radius: var(--r);
   padding: 10px 12px;
   margin-top: 6px;
 }
@@ -162,7 +162,7 @@
   letter-spacing: 1.5px;
   text-transform: uppercase;
   padding: 5px 12px;
-  border-radius: 50px;
+  border-radius: var(--r);
   background: rgba(212,175,55,0.1);
   color: var(--or);
   border: 1px solid rgba(212,175,55,0.25);
@@ -218,7 +218,7 @@
   width: 100%;
   background: rgba(212,175,55,0.04);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r);
   padding: 12px 16px;
   color: var(--text);
   font-size: 0.92rem;
@@ -228,7 +228,6 @@
 .admin-modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
 .admin-modal-card-lg { max-width: 640px; }
 
-/* ── Devis & Factures : formulaire de prestations ── */
 .q-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
 .q-item-row {
   display: grid;
@@ -240,7 +239,7 @@
   width: 100%;
   background: rgba(212,175,55,0.04);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--r);
   padding: 9px 10px;
   color: var(--text);
   font-size: 0.88rem;
@@ -248,7 +247,7 @@
 }
 .q-item-remove {
   width: 32px; height: 32px;
-  border-radius: 6px;
+  border-radius: var(--r);
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text3);
@@ -263,7 +262,7 @@
   justify-content: space-between;
   align-items: center;
   background: var(--bg3);
-  border-radius: 8px;
+  border-radius: var(--r);
   padding: 12px 16px;
   margin-bottom: 16px;
   font-family: var(--f-display);
@@ -272,7 +271,6 @@
   color: var(--or);
 }
 
-/* ── Devis & Factures : cartes de la liste ── */
 .admin-booking.status-sent     { border-left-color: var(--or2); }
 .admin-booking.status-accepted { border-left-color: #6FBF6F; }
 .admin-booking.status-declined { opacity: 0.6; border-left-color: var(--text3); }

@@ -1,11 +1,5 @@
-/* DJ KREOBASS - Portfolio JavaScript */
 'use strict';
-/* Le drop sonore d'ouverture est géré par un petit script inline juste après
-   la balise <audio id="intro-drop"> dans index.html (pas ici), pour qu'il se
-   déclenche dès que possible — sans attendre que ce fichier, chargé en bas de
-   page après toutes les images/vidéos, soit téléchargé et exécuté. */
 
-/* ── Navbar scroll ── */
 (function initNavbar() {
   const navbar = document.getElementById('navbar');
   const toggle = document.getElementById('nav-toggle');
@@ -40,7 +34,6 @@
   }
 })();
 
-/* ── Smooth scroll ── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const target = document.querySelector(a.getAttribute('href'));
@@ -51,19 +44,16 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-/* ── Footer year ── */
 (function setFooterYear() {
   const el = document.getElementById('footer-year');
   if (el) el.textContent = new Date().getFullYear();
 })();
 
-/* ── Date minimum = aujourd'hui ── */
 (function setMinDate() {
   const el = document.getElementById('event_date');
   if (el) el.min = new Date().toISOString().split('T')[0];
 })();
 
-/* ── Ticker musical ── */
 function renderTicker() {
   const track = document.getElementById('ticker-track');
   if (!track) return;
@@ -79,9 +69,6 @@ function renderTicker() {
   animateTicker(track);
 }
 
-/* Défilement piloté en JS (requestAnimationFrame) plutôt que par animation CSS pure :
-   plus fiable sur mobile (certains navigateurs/modes économie d'énergie mettent en
-   pause les animations CSS "infinite" sans prévenir). Respecte prefers-reduced-motion. */
 function animateTicker(track) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const SPEED = 40; // pixels par seconde
@@ -102,7 +89,6 @@ function animateTicker(track) {
   requestAnimationFrame(step);
 }
 
-/* ── Mixes / Jukebox : détection des pistes lisibles via SoundCloud ── */
 function isPlayableSoundcloud(url) {
   return typeof url === 'string' && /^https?:\/\/(www\.)?(soundcloud\.com|on\.soundcloud\.com)\//.test(url);
 }
@@ -122,11 +108,6 @@ function soundcloudEmbedSrc(url) {
   return `https://w.soundcloud.com/player/?${params.toString()}`;
 }
 
-/* ── Table de mixage : deux platines indépendantes, chacune lisant soit un
-   morceau SoundCloud (API Widget) soit un fichier audio hébergé directement
-   (assets/audio/...) via un <audio> natif. Les deux platines sont totalement
-   indépendantes et peuvent jouer en même temps (true dual playback) ; le
-   crossfader règle le vrai volume de chacune. ── */
 let djTracks = [];
 const deckState = {
   a: { kind: null, widget: null, ready: false, playing: false, trackIndex: -1,
@@ -171,16 +152,11 @@ function renderDjConsole(mixes) {
   initDeckAudioElement('a');
   initDeckAudioElement('b');
 
-  /* Charge d'office les 2 premiers titres lisibles sur A et B, sans lancer la lecture.
-     Chaque platine est indépendante : appuyer sur lecture sur A ET sur B fait jouer
-     les deux morceaux en même temps, à mixer avec le crossfader. */
   const playable = djTracks.map((m, i) => i).filter(i => isPlayableTrack(djTracks[i]));
   if (playable[0] !== undefined) loadDeck('a', playable[0], false);
   if (playable[1] !== undefined) loadDeck('b', playable[1], false);
 }
 
-/* Branche les événements du lecteur <audio> natif une seule fois par platine
-   (réutilisé à chaque changement de morceau local, pas recréé). */
 function initDeckAudioElement(deck) {
   const state = deckState[deck];
   const audio = document.getElementById(state.audioId);
@@ -213,8 +189,6 @@ function loadDeck(deck, index, autoplay = true) {
   const iframe  = document.getElementById(state.iframeId);
 
   if (isLocal) {
-    /* Bascule vers un fichier local : on coupe le lecteur SoundCloud de cette
-       platine s'il tournait, pour ne pas entendre les deux superposés dessus. */
     if (state.kind === 'sc' && state.widget && state.ready) state.widget.pause();
     state.kind = 'local';
     const btn = document.getElementById(state.playBtnId);
@@ -225,7 +199,6 @@ function loadDeck(deck, index, autoplay = true) {
     return;
   }
 
-  /* Piste SoundCloud : on coupe le lecteur local de cette platine s'il tournait. */
   if (state.kind === 'local') audio.pause();
   state.kind = 'sc';
 
@@ -246,9 +219,6 @@ function loadDeck(deck, index, autoplay = true) {
   };
 
   if (state.widget && state.ready) {
-    /* widget.load() attend l'URL brute de la piste SoundCloud (son "permalink"),
-       pas l'URL d'intégration du lecteur (soundcloudEmbedSrc) — sinon le
-       changement de morceau échoue silencieusement une fois le lecteur déjà actif. */
     state.widget.load(mix.soundcloud_url, { callback: () => { if (autoplay) state.widget.play(); } });
   } else {
     iframe.src = url;
@@ -281,7 +251,6 @@ function setDeckPlaying(deck, playing) {
   animateDeckMeter(deck);
 }
 
-/* ── Crossfader : contrôle le vrai volume de chaque platine (pas juste un habillage) ── */
 function getDeckVolume(deck) {
   const x = Number(document.getElementById('dj-crossfader')?.value ?? 50);
   return deck === 'a' ? 100 - x : x;
@@ -299,11 +268,6 @@ function updateCrossfaderVolumes() {
   });
 }
 
-/* Pulsation rythmique simulée par platine : le lecteur SoundCloud intégré ne donne
-   accès ni au signal audio ni au tempo réel (autre domaine), donc impossible
-   d'analyser le vrai rythme. Chaque platine pulse à son propre tempo irrégulier
-   simulé pendant sa lecture, pour une sensation vivante — les deux peuvent
-   tourner en même temps, comme un vrai mix. */
 const deckBeatTimers = { a: null, b: null };
 function startDeckBeat(deck) {
   stopDeckBeat(deck);
@@ -321,8 +285,6 @@ function stopDeckBeat(deck) {
   document.getElementById(deckState[deck].deckElId)?.classList.remove('beat');
 }
 
-/* VU-mètre : animation visuelle (pas une vraie mesure de niveau, même limite que
-   la pulsation — aucun accès au signal audio réel du lecteur intégré). */
 const meterTimers = { a: null, b: null };
 function animateDeckMeter(deck) {
   clearInterval(meterTimers[deck]);
@@ -336,10 +298,6 @@ function animateDeckMeter(deck) {
   }, 140);
 }
 
-/* ── Tarifs / Configurateur de soirée ──
-   L'internaute choisit un type d'événement puis des options (éclairage, machine
-   à fumée...) ; le total s'affiche en direct (ou "Sur devis" tant que les prix ne
-   sont pas renseignés dans data.json), et la demande de devis part déjà pré-remplie. */
 const FORMULA_ICONS = {
   wedding: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="14" r="5"/><circle cx="15" cy="14" r="5"/></svg>',
   birthday: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z"/></svg>',
@@ -356,8 +314,6 @@ const OPTION_ICONS = {
   mc:         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
 };
 const DEFAULT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/></svg>';
-/* Icône "emplacement photo" : affichée tant qu'aucune vraie photo n'est renseignée
-   dans data.json (pricingOptions[].photo), pour qu'on voie clairement où en ajouter une. */
 const PHOTO_PLACEHOLDER_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
 
 let configFormulas = [];
@@ -443,7 +399,6 @@ function updateConfigSummary() {
   summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-/* ── Modale de détail d'une option (photo, description, ajout à la sélection) ── */
 function openOptionModal(id) {
   const option = configOptions.find(o => o.id === id);
   const modal  = document.getElementById('option-modal');
@@ -491,7 +446,6 @@ function openOptionModal(id) {
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
 })();
 
-/* ── Guide par questions : recommande le type d'événement sans IA réelle ── */
 const QUIZ_QUESTIONS = [
   {
     question: "Quelle est l'occasion ?",
@@ -582,7 +536,6 @@ function restartQuiz() {
   document.getElementById('quiz-skip-btn')?.addEventListener('click', () => revealFormulaStep(null));
 })();
 
-/* ── Pré-remplissage de la demande de devis avec la configuration choisie ── */
 (function initConfigCta() {
   const ctaBtn = document.getElementById('config-cta-btn');
   if (!ctaBtn) return;
@@ -621,115 +574,24 @@ function restartQuiz() {
   });
 })();
 
-/* ── Événements (rendu + filtre) ── */
-let allEvents     = [];
-let staticEvents  = [];
-let liveEvents    = [];
-
-const MONTHS_ABBR_FR = ['jan','fév','mar','avr','mai','juin','juil','août','sept','oct','nov','déc'];
-function eventSortKey(event) {
-  const [dayStr, monthStr, yearStr] = (event.date || '').split(' ');
-  const day   = parseInt(dayStr, 10) || 1;
-  const year  = parseInt(yearStr, 10) || 0;
-  const monthIndex = MONTHS_ABBR_FR.findIndex(m => (monthStr || '').toLowerCase().startsWith(m.slice(0, 3)));
-  return new Date(year, monthIndex >= 0 ? monthIndex : 0, day).getTime();
-}
-
-function mergeAndRenderEvents() {
-  const merged = [...staticEvents, ...liveEvents].sort((a, b) => eventSortKey(a) - eventSortKey(b));
-  renderEvents(merged);
-}
-
-window.addEventListener('kb:confirmed-events', e => {
-  liveEvents = e.detail || [];
-  mergeAndRenderEvents();
-});
-
-function renderEvents(events) {
-  allEvents = events;
-  const list = document.getElementById('events-list');
-  if (!list) return;
-  list.innerHTML = events.map(event => {
-    const parts = event.date.split(' ');
-    const day   = parts[0] || '';
-    const month = parts.slice(1).join(' ');
-    const isPast = event.status === 'past';
-    const isBookable = event.bookable !== false;
-    return `
-    <li class="event-item reveal ${isPast ? 'event-past' : ''}" data-status="${escapeHtml(event.status)}">
-      <div class="event-date-box">
-        <span class="event-day">${escapeHtml(day)}</span>
-        <span class="event-month">${escapeHtml(month)}</span>
-      </div>
-      <div class="event-details">
-        <h3 class="event-venue">${escapeHtml(event.venue)}</h3>
-        <div class="event-meta">
-          ${event.city ? `
-          <span class="event-city">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            ${escapeHtml(event.city)}
-          </span>` : ''}
-          ${event.time ? `
-          <span class="event-time">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            ${escapeHtml(event.time)}
-          </span>` : ''}
-        </div>
-      </div>
-      <div class="event-status">
-        ${isPast
-          ? '<span class="status-badge past">Terminé</span>'
-          : (isBookable
-              ? '<a href="#contact" class="btn btn-sm btn-primary">Réserver</a>'
-              : '<span class="status-badge confirmed">Confirmée</span>')}
-      </div>
-    </li>`;
-  }).join('');
-
-  initEventsFilter();
-  applyEventFilter(document.querySelector('.filter-btn.active')?.dataset.filter || 'upcoming');
-}
-
-function applyEventFilter(filter) {
-  document.querySelectorAll('.event-item').forEach(item => {
-    const show = filter === 'all' || item.dataset.status === filter;
-    item.style.display = show ? 'grid' : 'none';
-  });
-}
-
-function initEventsFilter() {
-  const btns = document.querySelectorAll('.filter-btn');
-  btns.forEach(btn => {
-    btn.onclick = () => {
-      btns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      applyEventFilter(btn.dataset.filter);
-    };
-  });
-}
-
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str ?? '';
   return div.innerHTML;
 }
 
-/* ── Chargement des données (mixes / events / tarifs) ── */
 (function loadData() {
   renderTicker();
   fetch('data/data.json')
     .then(res => res.json())
     .then(data => {
       renderDjConsole(data.mixes || []);
-      staticEvents = data.events || [];
-      mergeAndRenderEvents();
       renderPricingConfigurator(data.pricing || [], data.pricingOptions || []);
       initReveal();
     })
     .catch(err => console.error('Erreur de chargement des données :', err));
 })();
 
-/* ── Intersection Observer (reveal + skills + counters) ── */
 function initReveal() {
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -753,8 +615,6 @@ function initReveal() {
     ['.contact-form',     'reveal-right'],
     ['.section-header',   'reveal'],
     ['.era-card',         'reveal'],
-    ['.highlight-card',   'reveal'],
-    ['.reviews-widget',   'reveal'],
   ];
   map.forEach(([sel, cls]) => {
     document.querySelectorAll(sel).forEach((el, i) => {
@@ -765,23 +625,6 @@ function initReveal() {
   initReveal();
 })();
 
-/* ── Skill bars ── */
-(function initSkillBars() {
-  const skillIo = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.querySelectorAll('.skill-fill').forEach(bar => {
-        bar.style.width = bar.dataset.width + '%';
-      });
-      skillIo.unobserve(entry.target);
-    });
-  }, { threshold: 0.3 });
-
-  const aboutSection = document.querySelector('.about-skills');
-  if (aboutSection) skillIo.observe(aboutSection);
-})();
-
-/* ── Counters ── */
 (function initCounters() {
   const counterIo = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -807,7 +650,6 @@ function animateCounter(el, target) {
   }, 25);
 }
 
-/* ── Champ "Nom du lieu" : visible uniquement pour les soirées publiques (bar/guinguette) ── */
 (function initVenueFieldToggle() {
   const select = document.getElementById('event_type');
   const group  = document.getElementById('venue_name_group');
@@ -817,7 +659,6 @@ function animateCounter(el, target) {
   sync();
 })();
 
-/* ── Contact form (réservation Firestore + notification Formspree) ── */
 (function initContactForm() {
   const form    = document.getElementById('contact-form');
   const success = document.getElementById('form-success');
@@ -896,7 +737,6 @@ function animateCounter(el, target) {
         }
       }
 
-      /* Notification email best-effort (n'empêche pas la réservation d'être validée) */
       try {
         await fetch(form.action, {
           method: 'POST',
@@ -924,7 +764,6 @@ function animateCounter(el, target) {
   });
 })();
 
-/* ── Progressive Web App : enregistrement du service worker ── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').catch(err => {
@@ -932,3 +771,30 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+(function protectContent() {
+  const editable = el => el && el.closest('input, textarea, select, [contenteditable="true"]');
+
+  document.addEventListener('contextmenu', e => {
+    if (!editable(e.target)) e.preventDefault();
+  });
+  document.addEventListener('dragstart', e => {
+    if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault();
+  });
+  document.addEventListener('copy', e => {
+    if (!editable(e.target)) e.preventDefault();
+  });
+  document.addEventListener('keydown', e => {
+    const key = e.key.toLowerCase();
+    const mod = e.ctrlKey || e.metaKey;
+    if (e.key === 'F12'
+      || (mod && ['u', 's', 'p'].includes(key))
+      || (mod && e.shiftKey && ['i', 'j', 'c'].includes(key))) {
+      e.preventDefault();
+    }
+  });
+  document.querySelectorAll('video').forEach(v => {
+    v.setAttribute('controlsList', 'nodownload');
+    v.disablePictureInPicture = true;
+  });
+})();

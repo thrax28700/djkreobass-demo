@@ -1,4 +1,3 @@
-/* DJ KREOBASS — Espace Admin (Firebase Auth + Firestore temps réel) */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut,
@@ -27,7 +26,6 @@ if (!window.FIREBASE_READY) {
   runAdmin();
 }
 
-/* Avertissements Devis & Factures (indépendants de Firebase) */
 document.getElementById('emailjs-warning').hidden  = !!window.EMAILJS_READY;
 document.getElementById('business-warning').hidden = !!window.BUSINESS_INFO_READY;
 if (window.EMAILJS_READY && window.emailjs) {
@@ -44,7 +42,6 @@ function runAdmin() {
   let quotes = [];
   let activeQuoteFilter = 'all';
 
-  /* ── Onglets ── */
   document.querySelectorAll('.admin-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
@@ -54,7 +51,6 @@ function runAdmin() {
     });
   });
 
-  /* ── Connexion ── */
   const loginForm  = document.getElementById('login-form');
   const loginError = document.getElementById('login-error');
 
@@ -92,7 +88,6 @@ function runAdmin() {
     }
   });
 
-  /* ── Écoute temps réel des réservations ── */
   function listenBookings() {
     onSnapshot(collection(db, 'bookings'), snap => {
       bookings = snap.docs
@@ -190,7 +185,6 @@ function runAdmin() {
     }
   }
 
-  /* ── Filtres ── */
   document.querySelectorAll('#tab-bookings .admin-filters .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#tab-bookings .admin-filters .filter-btn').forEach(b => b.classList.remove('active'));
@@ -200,7 +194,6 @@ function runAdmin() {
     });
   });
 
-  /* ── Modale : réservation manuelle ── */
   const modal        = document.getElementById('add-booking-modal');
   const addBtn        = document.getElementById('add-booking-btn');
   const cancelBtn      = document.getElementById('cancel-booking-btn');
@@ -256,10 +249,6 @@ function runAdmin() {
     }
   });
 
-  /* ══════════════════════════
-     DEVIS & FACTURES
-  ══════════════════════════ */
-
   function quoteNumber(prefix) {
     const now = new Date();
     const pad = n => String(n).padStart(2, '0');
@@ -302,7 +291,6 @@ function runAdmin() {
     }
   }
 
-  /* ── Écoute temps réel ── */
   function listenQuotes() {
     onSnapshot(collection(db, 'quotes'), snap => {
       quotes = snap.docs
@@ -430,7 +418,6 @@ function runAdmin() {
     }
   }
 
-  /* ── Filtres devis ── */
   document.querySelectorAll('#tab-quotes .admin-filters .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#tab-quotes .admin-filters .filter-btn').forEach(b => b.classList.remove('active'));
@@ -440,7 +427,6 @@ function runAdmin() {
     });
   });
 
-  /* ── Modale : nouveau devis ── */
   const quoteModal      = document.getElementById('add-quote-modal');
   const addQuoteBtn      = document.getElementById('add-quote-btn');
   const cancelQuoteBtn    = document.getElementById('cancel-quote-btn');

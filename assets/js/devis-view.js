@@ -1,4 +1,3 @@
-/* DJ KREOBASS — Page publique d'acceptation d'un devis/facture (Firebase Firestore) */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getFirestore, doc, getDoc, updateDoc, serverTimestamp,

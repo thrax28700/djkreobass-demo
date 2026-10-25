@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="assets/css/admin.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="admin-body">
 
@@ -31,7 +31,6 @@
 
   <main class="admin-main">
 
-    <!-- ═══════ LOGIN ═══════ -->
     <section id="login-view" class="admin-login">
       <div class="admin-card admin-login-card">
         <h1>Connexion</h1>
@@ -54,7 +53,6 @@
       </div>
     </section>
 
-    <!-- ═══════ DASHBOARD ═══════ -->
     <section id="dashboard-view" class="admin-dashboard" hidden>
 
       <div class="admin-tabs" role="tablist" aria-label="Sections admin">
@@ -62,7 +60,6 @@
         <button type="button" class="admin-tab" data-tab="quotes">Devis &amp; Factures</button>
       </div>
 
-      <!-- ── Onglet Réservations ── -->
       <div id="tab-bookings" class="admin-tab-panel">
         <div class="admin-stats">
           <div class="admin-stat"><span id="stat-pending">0</span><small>En attente</small></div>
@@ -84,7 +81,6 @@
         <p id="bookings-empty" class="admin-empty" hidden>Aucune réservation dans cette catégorie.</p>
       </div>
 
-      <!-- ── Onglet Devis & Factures ── -->
       <div id="tab-quotes" class="admin-tab-panel" hidden>
         <div id="emailjs-warning" class="admin-warning" hidden>
           EmailJS n'est pas encore configuré (voir <code>assets/js/emailjs-config.js</code>) — les devis
@@ -114,7 +110,6 @@
 
   </main>
 
-  <!-- ═══════ MODALE : réservation manuelle ═══════ -->
   <div id="add-booking-modal" class="admin-modal" hidden>
     <div class="admin-modal-card">
       <h2>Réservation manuelle</h2>
@@ -158,7 +153,6 @@
     </div>
   </div>
 
-  <!-- ═══════ MODALE : nouveau devis ═══════ -->
   <div id="add-quote-modal" class="admin-modal" hidden>
     <div class="admin-modal-card admin-modal-card-lg">
       <h2>Nouveau devis</h2>

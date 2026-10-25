@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'djkreobass-v4';
+const CACHE_NAME = 'djkreobass-v5';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -39,9 +39,6 @@ self.addEventListener('activate', event => {
   );
 });
 
-/* Réseau en priorité (le site est en développement actif) : garantit que chaque
-   visite affiche la dernière version déployée ; le cache ne sert que de secours
-   hors-ligne, jamais de version obsolète pendant que le réseau fonctionne. */
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 

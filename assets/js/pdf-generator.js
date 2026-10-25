@@ -1,12 +1,3 @@
-/*
-  DJ KREOBASS — Génération PDF des devis/factures
-  ─────────────────────────────────────
-  Script partagé entre l'espace admin (admin.js) et la page publique
-  d'acceptation (devis-view.js). Nécessite jsPDF + jspdf-autotable
-  (chargés en CDN avant ce fichier) et window.BUSINESS_INFO.
-
-  Usage : window.generateQuotePDF(quote) → déclenche le téléchargement.
-*/
 (function () {
   const EVENT_LABELS = {
     wedding: 'Mariage',
@@ -37,7 +28,6 @@
     const darkRGB = [20, 18, 12];
     const grayRGB = [110, 105, 90];
 
-    /* ── En-tête ── */
     doc.setFillColor(...darkRGB);
     doc.rect(0, 0, 210, 34, 'F');
     doc.setTextColor(...goldRGB);
@@ -63,7 +53,6 @@
     let y = 44;
     doc.setTextColor(...darkRGB);
 
-    /* ── Émetteur / Client ── */
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.text('Émetteur', 14, y);
@@ -91,7 +80,6 @@
 
     y = Math.max(ey, cy) + 6;
 
-    /* ── Détail événement ── */
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(...darkRGB);
@@ -108,7 +96,6 @@
 
     y += 14;
 
-    /* ── Tableau des prestations ── */
     const rows = (quote.items || []).map(it => [
       it.label || '',
       String(it.qty ?? 1),
@@ -133,7 +120,6 @@
 
     let afterTableY = doc.lastAutoTable.finalY + 8;
 
-    /* ── Total ── */
     doc.setFillColor(...darkRGB);
     doc.rect(130, afterTableY, 66, 12, 'F');
     doc.setTextColor(...goldRGB);
@@ -144,7 +130,6 @@
 
     afterTableY += 20;
 
-    /* ── Notes / conditions ── */
     doc.setTextColor(...grayRGB);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8.5);
@@ -160,7 +145,6 @@
       afterTableY += 6;
     }
 
-    /* ── Pied de page ── */
     doc.setFontSize(7.5);
     doc.setTextColor(...grayRGB);
     doc.text('DJ KREOBASS — document généré depuis djkreobass.fr', 14, 288);

@@ -1,4 +1,3 @@
-/* DJ KREOBASS — Calendrier de réservation public (Firebase Firestore) */
 import {
   initializeApp,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -8,12 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const MONTHS_FR   = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-const MONTHS_ABBR = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
 const DAYS_FR      = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-const EVENT_LABELS = {
-  wedding: 'Mariage', birthday: 'Anniversaire', corporate: 'Séminaire / Entreprise',
-  bar: 'Soirée Bar / Guinguette', other: 'Autre',
-};
 
 let db = null;
 let availability = {};      // { 'YYYY-MM-DD': { status, eventType } }
@@ -118,22 +112,6 @@ function renderMonth() {
   });
 }
 
-/* Convertit une entrée du calendrier public en item d'agenda ("À venir" / "Passés").
-   Les soirées privées (mariage, anniversaire, séminaire) restent anonymes : ni nom
-   du client, ni lieu — seules les soirées publiques (bar/guinguette) affichent le lieu. */
-function calendarEntryToAgendaEvent(dateId, entry) {
-  const [y, m, d] = dateId.split('-').map(Number);
-  const isPublic = entry.eventType === 'bar';
-  return {
-    date: `${pad(d)} ${MONTHS_ABBR[m - 1]} ${y}`,
-    venue: isPublic ? (entry.venueName || EVENT_LABELS.bar) : 'Soirée privée',
-    city: isPublic ? 'Centre-Val de Loire' : '',
-    time: '',
-    status: dateId >= toDateId(new Date()) ? 'upcoming' : 'past',
-    bookable: false,
-  };
-}
-
 function initFirestoreListener() {
   if (!window.FIREBASE_READY) return;
   try {
@@ -141,22 +119,16 @@ function initFirestoreListener() {
     db = getFirestore(app);
     onSnapshot(collection(db, 'calendar'), snap => {
       availability = {};
-      const confirmedEvents = [];
       snap.forEach(d => {
         availability[d.id] = d.data();
-        if (d.data().status === 'confirmed') {
-          confirmedEvents.push(calendarEntryToAgendaEvent(d.id, d.data()));
-        }
       });
       renderMonth();
-      window.dispatchEvent(new CustomEvent('kb:confirmed-events', { detail: confirmedEvents }));
     }, err => console.error('Erreur de synchronisation du calendrier :', err));
   } catch (err) {
     console.error('Erreur d’initialisation Firebase :', err);
   }
 }
 
-/* API utilisée par script.js lors de l'envoi du formulaire */
 window.Booking = {
   getSelectedDate: () => selectedDate,
 
