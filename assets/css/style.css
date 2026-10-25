@@ -1644,3 +1644,52 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(
 body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 input, textarea, select, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
 img, video { -webkit-user-drag: none; }
+
+.copy-warning {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: calc(100% - 32px);
+  padding: 14px 22px 14px 16px;
+  border-radius: var(--r);
+  background: var(--card);
+  border: 2px solid var(--or);
+  box-shadow: 6px 6px 0 var(--party), var(--shadow-xl);
+  color: var(--text);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 30px) scale(0.9);
+  transition: opacity .25s ease, transform .35s var(--pop);
+}
+.copy-warning.show { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(-1deg); }
+.copy-warning svg { width: 30px; height: 30px; flex-shrink: 0; color: var(--or); }
+.copy-warning.show svg { animation: icon-bounce .6s var(--pop); }
+.copy-warning strong { display: block; font-family: var(--f-display); font-size: 1.15rem; letter-spacing: 1px; text-transform: uppercase; color: var(--or); line-height: 1.2; }
+.copy-warning span { font-size: 0.85rem; color: var(--text2); }
+
+body.screen-shield > *:not(.copy-warning) { filter: blur(24px) brightness(0.4); transition: filter .1s; }
+body.screen-shield::after {
+  content: '© DJ KREOBASS. Reproduction interdite.';
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  font-family: var(--f-display);
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  text-transform: uppercase;
+  color: var(--or);
+  text-shadow: 4px 4px 0 var(--bronze2);
+}
+
+@media print {
+  html.protected body * { display: none !important; }
+  html.protected body::after { content: '© DJ KREOBASS. Impression et reproduction interdites.'; display: block; padding: 40px; font-size: 20pt; color: #000; }
+}

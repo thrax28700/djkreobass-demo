@@ -773,26 +773,70 @@ if ('serviceWorker' in navigator) {
 }
 
 (function protectContent() {
-  const editable = el => el && el.closest('input, textarea, select, [contenteditable="true"]');
+  document.documentElement.classList.add('protected');
+  const editable = el => el && el.closest && el.closest('input, textarea, select, [contenteditable="true"]');
+  let toast = null;
+  let hideTimer = null;
+
+  function warn() {
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'copy-warning';
+      toast.setAttribute('role', 'alert');
+      toast.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <div>
+          <strong>Contenu protégé</strong>
+          <span>© DJ KREOBASS. Toute reproduction est interdite.</span>
+        </div>`;
+      document.body.appendChild(toast);
+    }
+    toast.classList.remove('show');
+    void toast.offsetWidth;
+    toast.classList.add('show');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
 
   document.addEventListener('contextmenu', e => {
-    if (!editable(e.target)) e.preventDefault();
+    if (editable(e.target)) return;
+    e.preventDefault();
+    warn();
   });
   document.addEventListener('dragstart', e => {
-    if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault();
+    if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+      e.preventDefault();
+      warn();
+    }
   });
   document.addEventListener('copy', e => {
-    if (!editable(e.target)) e.preventDefault();
+    if (editable(e.target)) return;
+    e.preventDefault();
+    warn();
   });
   document.addEventListener('keydown', e => {
-    const key = e.key.toLowerCase();
+    const key = (e.key || '').toLowerCase();
     const mod = e.ctrlKey || e.metaKey;
     if (e.key === 'F12'
       || (mod && ['u', 's', 'p'].includes(key))
       || (mod && e.shiftKey && ['i', 'j', 'c'].includes(key))) {
       e.preventDefault();
+      warn();
     }
   });
+  document.addEventListener('keyup', e => {
+    if (e.key !== 'PrintScreen') return;
+    if (navigator.clipboard) navigator.clipboard.writeText('').catch(() => {});
+    document.body.classList.add('screen-shield');
+    setTimeout(() => document.body.classList.remove('screen-shield'), 1500);
+    warn();
+  });
+  window.addEventListener('blur', () => document.body.classList.add('screen-shield'));
+  window.addEventListener('focus', () => document.body.classList.remove('screen-shield'));
+  document.addEventListener('visibilitychange', () => {
+    document.body.classList.toggle('screen-shield', document.hidden);
+  });
+
   document.querySelectorAll('video').forEach(v => {
     v.setAttribute('controlsList', 'nodownload');
     v.disablePictureInPicture = true;
