@@ -60,7 +60,6 @@
         <li><a href="#pricing" class="nav-link">Tarifs</a></li>
         <li><a href="#mixes"   class="nav-link">Mixes</a></li>
         <li><a href="#chope-compagnie"  class="nav-link">Chope &amp; Co</a></li>
-        <li><a href="#events"  class="nav-link">Événements</a></li>
         <li><a href="#reviews" class="nav-link">Avis</a></li>
         <li><a href="#contact" class="nav-link nav-cta">Contact</a></li>
       </ul>
@@ -367,56 +366,39 @@
   <section class="venue-spotlight" id="chope-compagnie" aria-labelledby="chope-compagnie-title">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Focus</span>
+        <span class="section-tag">Soirée</span>
         <h2 class="section-title" id="chope-compagnie-title">Chope &amp; Compagnie</h2>
       </div>
-      <p class="venue-spotlight-city">Châteaudun</p>
-      <p class="venue-spotlight-intro">
-        Un aperçu de l'ambiance chez Chope &amp; Compagnie à Châteaudun — photos et vidéos
-        prises sur place, pour montrer un peu ce que DJ KREOBASS fait en soirée.
-      </p>
-      <div class="venue-spotlight-grid">
-        <div class="venue-media venue-media-wide reveal">
-          <video controls preload="metadata" poster="assets/videos/set-extract-poster.jpg" playsinline>
-            <source src="assets/videos/set-extract.mp4" type="video/mp4">
-          </video>
+      <p class="venue-spotlight-city">Saint-Denis-Lanneray · Châteaudun</p>
+      <div class="venue-feature">
+        <div class="venue-feature-media">
+          <a class="venue-media venue-media-poster reveal" href="assets/images/soirees/chope-et-compagnie-1an-affiche.jpg" target="_blank" rel="noopener">
+            <img src="assets/images/soirees/chope-et-compagnie-1an-affiche.jpg" alt="Affiche : 1 an de Chope &amp; Compagnie, soirée anniversaire du vendredi 23 octobre 2026 à Saint-Denis-Lanneray — concert Bruno Latournerie puis mix DJ KREOBASS" loading="lazy">
+          </a>
+          <div class="venue-media venue-media-portrait reveal">
+            <video controls preload="metadata" poster="assets/videos/chope-et-compagnie-1an-poster.jpg" playsinline>
+              <source src="assets/videos/chope-et-compagnie-1an.mp4" type="video/mp4">
+            </video>
+          </div>
         </div>
-        <div class="venue-media reveal">
-          <video controls preload="metadata" poster="assets/videos/reel-clip-poster.jpg" playsinline>
-            <source src="assets/videos/reel-clip.mp4" type="video/mp4">
-          </video>
+        <div class="venue-feature-text reveal">
+          <span class="venue-feature-badge">1 an de Chope &amp; Compagnie</span>
+          <h3>La soirée anniversaire</h3>
+          <p class="venue-feature-date">Vendredi 23 octobre 2026 · 18h – 2h</p>
+          <p>
+            Pour fêter la première année de Chope &amp; Compagnie, DJ KREOBASS a pris les platines
+            après le concert de Bruno Latournerie : robots géants, gâteau d'anniversaire et piste
+            pleine jusqu'à la fermeture.
+          </p>
+          <p>
+            Un lieu où DJ KREOBASS anime régulièrement des soirées — l'ambiance bar &amp; guinguette
+            telle qu'il la fait vivre.
+          </p>
+          <a href="#contact" class="btn btn-primary">
+            Organiser votre soirée
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
         </div>
-        <div class="venue-media venue-media-empty reveal" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>Photo à venir</span>
-        </div>
-        <div class="venue-media venue-media-empty reveal" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>Photo à venir</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════ EVENTS ═══════ -->
-  <section class="events" id="events" aria-labelledby="events-title">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Agenda</span>
-        <h2 class="section-title" id="events-title">Événements</h2>
-      </div>
-      <div class="events-filter" role="group" aria-label="Filtrer">
-        <button type="button" class="filter-btn active" data-filter="upcoming">À venir</button>
-        <button type="button" class="filter-btn"        data-filter="past">Passés</button>
-        <button type="button" class="filter-btn"        data-filter="all">Tous</button>
-      </div>
-      <ul class="events-list" id="events-list"></ul>
-      <div class="events-cta">
-        <p>Envie de réserver DJ KREOBASS pour votre mariage, anniversaire ou événement ?</p>
-        <a href="#contact" class="btn btn-primary">
-          Réserver une date
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </a>
       </div>
     </div>
   </section>
@@ -588,7 +570,6 @@
           <div class="form-group" id="venue_name_group" hidden>
             <label for="venue_name">Nom du lieu</label>
             <input type="text" id="venue_name" name="venue_name" placeholder="Ex : Chope et Compagnie, Chartres" maxlength="120">
-            <p class="form-hint">Soirée publique : ce lieu apparaîtra dans l'agenda du site une fois la date confirmée.</p>
           </div>
           <div class="form-group">
             <label>Date souhaitée</label>
@@ -630,7 +611,6 @@
           <a href="#pricing">Tarifs</a>
           <a href="#mixes">Mixes</a>
           <a href="#chope-compagnie">Chope &amp; Co</a>
-          <a href="#events">Événements</a>
           <a href="#contact">Contact</a>
         </nav>
         <div class="footer-socials">
