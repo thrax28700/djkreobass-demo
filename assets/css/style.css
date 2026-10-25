@@ -35,8 +35,12 @@
 
   /* Misc */
   --nav-h: 70px;
-  --r:     2px;
-  --t:     0.2s ease;
+  --r:     12px;
+  --t:     0.25s ease;
+  --pop:   cubic-bezier(.34, 1.56, .64, 1);
+  --party: #FF3D8B;
+  --party2: #8B5CF6;
+  --hard:  5px 5px 0 var(--bronze2);
 
   --safe-top:    env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -1569,6 +1573,71 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) sepia(
   .quiz-card { padding: 28px 20px; }
   .quiz-question { font-size: 1.3rem; }
   .config-summary { padding: 20px; }
+}
+
+/* Ambiance */
+.btn { border-radius: 50px; transition: transform .3s var(--pop), box-shadow .3s var(--pop), background var(--t), color var(--t); }
+.btn-primary { box-shadow: 0 4px 0 var(--bronze), 0 10px 24px rgba(212,175,55,0.25); }
+.btn-primary:hover { transform: translateY(-3px) rotate(-2deg) scale(1.04); box-shadow: 0 6px 0 var(--bronze), 0 16px 32px rgba(255,61,139,0.35); }
+.btn-primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--bronze); }
+.btn-outline:hover { background: var(--or); color: #100C00; transform: translateY(-3px) rotate(2deg) scale(1.04); box-shadow: 0 14px 28px rgba(139,92,246,0.35); }
+.nav-link.nav-cta { border-radius: 50px; transition: transform .3s var(--pop); }
+.nav-link.nav-cta:hover { transform: rotate(-4deg) scale(1.08); }
+.nav-link:hover { transform: translateY(-2px); }
+.nav-link { display: inline-block; transition: color var(--t), transform .3s var(--pop); }
+
+.section-title { text-shadow: 4px 4px 0 var(--bronze2); }
+.title-name { text-shadow: 6px 6px 0 var(--bronze2), 0 0 60px rgba(212,175,55,0.25); transition: transform .4s var(--pop); }
+.hero-title:hover .title-name { transform: scale(1.03) rotate(-1deg); }
+
+.social-link { border-radius: 50%; transition: transform .35s var(--pop), background var(--t), color var(--t), box-shadow var(--t); }
+.social-link:hover { background: var(--or); color: #100C00; transform: translateY(-4px) rotate(-12deg) scale(1.12); box-shadow: 0 10px 20px rgba(255,61,139,0.35); }
+
+.about-img-placeholder { box-shadow: var(--hard), var(--shadow-lg); transition: transform .4s var(--pop), box-shadow .4s var(--pop); }
+.about-img-placeholder:hover { transform: rotate(-2deg) scale(1.02); box-shadow: 8px 8px 0 var(--party), var(--shadow-xl); }
+.about-badge { border-radius: 50%; transform: rotate(-10deg); box-shadow: var(--shadow-lg); animation: badge-wobble 4s ease-in-out infinite; }
+.stat { transition: transform .3s var(--pop); }
+.stat:hover { transform: translateY(-4px) scale(1.1); }
+
+.era-card { box-shadow: var(--shadow-md); transition: transform .35s var(--pop), box-shadow .35s var(--pop), border-color var(--t); }
+.era-card:nth-child(odd):hover  { transform: translateY(-8px) rotate(-2deg); }
+.era-card:nth-child(even):hover { transform: translateY(-8px) rotate(2deg); }
+.era-card:hover { border-color: var(--or); box-shadow: 6px 6px 0 var(--party2), var(--shadow-lg); }
+.era-card:hover .era-icon { animation: icon-bounce .6s var(--pop); }
+.era-genres span { transition: background var(--t), color var(--t), transform .25s var(--pop); }
+.era-genres span:hover { background: var(--or); color: #100C00; transform: scale(1.12) rotate(-3deg); }
+
+.quiz-card, .formula-card, .option-card, .dj-console, .dj-playlist, .contact-form, .config-summary, .booking-calendar { box-shadow: var(--shadow-lg); }
+.quiz-answer-btn { transition: transform .25s var(--pop), background var(--t), border-color var(--t), box-shadow var(--t); }
+.quiz-answer-btn:hover { transform: scale(1.03) rotate(-1deg); box-shadow: 4px 4px 0 var(--party); }
+.formula-card, .option-card { transition: transform .35s var(--pop), box-shadow .35s var(--pop), border-color var(--t); }
+.formula-card:hover, .option-card:hover { transform: translateY(-6px) rotate(-1deg); box-shadow: 6px 6px 0 var(--party), var(--shadow-lg); }
+.dj-playlist-row { transition: transform .25s var(--pop), background var(--t), box-shadow var(--t); }
+.dj-playlist-row:hover { transform: translateX(6px); box-shadow: -4px 0 0 var(--party); }
+.dj-load-btn { transition: transform .25s var(--pop), background var(--t), color var(--t); }
+.dj-load-btn:hover { transform: scale(1.12) rotate(-4deg); }
+.dj-deck-play { transition: transform .3s var(--pop), box-shadow var(--t); }
+.dj-deck-play:hover { transform: scale(1.15); box-shadow: 0 0 24px rgba(255,61,139,0.5); }
+
+.venue-media-hero { box-shadow: 8px 8px 0 var(--party2), var(--shadow-xl); transition: transform .4s var(--pop), box-shadow .4s var(--pop); }
+.venue-media-hero:hover { transform: rotate(-1.5deg) scale(1.02); box-shadow: 12px 12px 0 var(--party), var(--shadow-xl); }
+.venue-feature-badge { border-radius: 50px; transform: rotate(-3deg); }
+
+.contact-item { transition: transform .3s var(--pop); }
+.contact-item:hover { transform: translateX(6px); }
+.contact-icon { transition: transform .35s var(--pop); }
+.contact-item:hover .contact-icon { transform: rotate(-12deg) scale(1.15); }
+.cal-day { transition: transform .2s var(--pop), background var(--t); }
+.cal-day:not([disabled]):hover { transform: scale(1.15); }
+
+.whatsapp-float { animation: wa-pulse 2.4s ease-in-out infinite; }
+
+@keyframes badge-wobble { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(6deg) scale(1.05); } }
+@keyframes icon-bounce { 0% { transform: scale(1); } 40% { transform: scale(1.35) rotate(-10deg); } 100% { transform: scale(1); } }
+@keyframes wa-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); } 50% { box-shadow: 0 0 0 14px rgba(37,211,102,0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .about-badge, .whatsapp-float { animation: none; }
 }
 
 /* Protection */
